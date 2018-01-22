@@ -1,0 +1,27 @@
+Name:
+a name
+
+forced partial assignment:
+(1,2)
+
+forbidden machine:
+(3,4)
+(5,6)
+
+too-near tasks:
+(7,8)
+(9,10)
+
+machine penalties:
+0 0 0 0 0 0 0 0
+1 1 1 1 1 1 1 1
+2 2 2 2 2 2 2 2
+3 3 3 3 3 3 3 3
+4 4 4 4 4 4 4 4
+5 5 5 5 5 5 5 5
+6 6 6 6 6 6 6 6
+7 7 7 7 7 7 7 7
+
+too-near penalities
+(11,12)
+(13,14)
