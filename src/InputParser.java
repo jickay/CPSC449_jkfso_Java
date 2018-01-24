@@ -9,39 +9,21 @@ import java.util.Arrays;
 
 public class InputParser {
 	
-	private ArrayList<String> machines;
-	private ArrayList<String> tasks;
-	
 	private String path;
+	private Scheduler scheduler;
 	
-	private ArrayList<ArrayList<String>> forcedPairs = new ArrayList<ArrayList<String>>();
-	private ArrayList<ArrayList<String>> forbiddenPairs = new ArrayList<ArrayList<String>>();
-	private ArrayList<ArrayList<String>> tooNearInvalid = new ArrayList<ArrayList<String>>();
-	private ArrayList<ArrayList<String>> tooNearPenalties = new ArrayList<ArrayList<String>>();
-	private ArrayList<ArrayList<String>> machinePenalties = new ArrayList<ArrayList<String>>();
-	
-	// Temporary main method to run program
-	public static void main(String[] args) {
 		
-		InputParser parser = new InputParser("src/test.txt");
-		try {
-			parser.parseData();
-		} catch (IOException ioe) {
-			System.out.println("Error while parsing input file");
-		}
-	}
-	
 	private void printList(ArrayList<ArrayList<String>> list) {
 		for (int i=0; i<list.size(); i++) {
 			System.out.println(list.get(i));
+			System.exit(0);
 		}
 	}
 	
 	// Constructor
-	public InputParser (String filename) {
+	public InputParser (String filename, Scheduler scheduler) {
 		this.path = filename;
-		this.machines = new ArrayList<String>(Arrays.asList("1","2","3","4","5","6","7","8"));
-		this.tasks = new ArrayList<String>(Arrays.asList("A","B","C","D","E","F","G","H"));
+		this.scheduler = scheduler;
 	}
 	
 	// Read through file and parse data from each line of text
@@ -54,6 +36,7 @@ public class InputParser {
 	    while ((aLine = reader.readLine()) != null) {
 	    	checkLabel(reader, aLine);
 	    }
+	    scheduler.printLists();
 	}
 	
 	// Check for appropriate label and parse out values under each label
@@ -63,38 +46,50 @@ public class InputParser {
 		// For each label read values based on structure of text
 		switch (currentLine) {
 			case "forced partial assignment:":
-				readValues(reader,aLine,forcedPairs,"tuples","m,t");
+				scheduler.setForcedPairs(readTupleValues(reader,aLine,scheduler.getForcedPairs(),"tuples","m,t"));
 				break;
 			case "forbidden machine:":
-				readValues(reader,aLine,forbiddenPairs,"tuples","m,t");
+				scheduler.setForbiddenPairs(readTupleValues(reader,aLine,scheduler.getForbiddenPairs(),"tuples","m,t"));
 				break;
 			case "too-near tasks:":
-				readValues(reader,aLine,tooNearInvalid,"tuples","t,t");
+				scheduler.setTooNearInvalid(readTupleValues(reader,aLine,scheduler.getTooNearInvalid(),"tuples","t,t"));
 				break;
 			case "too-near penalities":
-				readValues(reader,aLine,tooNearPenalties,"tuples","t,t");
+				scheduler.setTooNearPenalties(readTupleValues(reader,aLine,scheduler.getTooNearPenalties(),"tuples","t,t"));
 				break;
 			case "machine penalties:":
-				readValues(reader,aLine,machinePenalties,"grid","none");
+				scheduler.setMachinePenalties(readGridValues(reader,aLine,scheduler.getMachinePenalties(),"grid","none"));
 				break;
 		}
 	}
 	
 	// Reads values in given section until it reaches a blank line or end of file
-	private void readValues(BufferedReader reader, String aLine, 
+	private ArrayList<ArrayList<String>> readTupleValues(BufferedReader reader, String aLine, 
 			ArrayList<ArrayList<String>> list, String parseType, String tupleType) {
 		try {
 			// Keep reading next line unless it is blank or end of file
 			while ((aLine = reader.readLine()) != null && !(aLine.replaceAll(" ", "").isEmpty())) {
-				if (parseType == "tuples") {
-					list.add(parseTuples(aLine,tupleType));
-				} else { 
-					list.add(parseGrid(aLine));
-				}
+				list.add(parseTuples(aLine,tupleType));
 			}
 		} catch (IOException e) {
 			System.out.println("Error while parsing input file");
+			System.exit(0);
 		}
+		return list;
+	}
+	
+	private ArrayList<ArrayList<Integer>> readGridValues(BufferedReader reader, String aLine, 
+			ArrayList<ArrayList<Integer>> list, String parseType, String tupleType) {
+		try {
+			// Keep reading next line unless it is blank or end of file
+			while ((aLine = reader.readLine()) != null && !(aLine.replaceAll(" ", "").isEmpty())) {
+				list.add(parseGrid(aLine));
+			}
+		} catch (IOException e) {
+			System.out.println("Error while parsing input file");
+			System.exit(0);
+		}
+		return list;
 	}
 	
 	// Extracts values from tuples [eg.(1,2)] into integer arraylist
@@ -106,21 +101,23 @@ public class InputParser {
 		ArrayList<String> tuple = new ArrayList<String>();
 		switch (type) {
 			case "m,t":
-				if (machines.contains(values[0]) && tasks.contains(values[1])) {
+				if (scheduler.getMachines().contains(values[0]) && scheduler.getTasks().contains(values[1])) {
 					for (int i=0; i<values.length; i++) {
 						tuple.add(values[i]);
 					}
 				} else {
 					System.out.println("Invalid machine/task");
+					System.exit(0);
 				}
 				break;
 			case "t,t":
-				if (tasks.contains(values[0]) && tasks.contains(values[1])) {
+				if (scheduler.getTasks().contains(values[0]) && scheduler.getTasks().contains(values[1])) {
 					for (int i=0; i<values.length; i++) {
 						tuple.add(values[i]);
 					}
 				} else {
 					System.out.println("Invalid machine/task");
+					System.exit(0);
 				}
 				break;
 			default: break;
@@ -130,13 +127,13 @@ public class InputParser {
 	}
 	
 	// Extracts values from grid separated by spaces into 2d arraylist
-	private ArrayList<String> parseGrid(String aLine) {
+	private ArrayList<Integer> parseGrid(String aLine) {
 		String[] values = aLine.split(" ");
 		
-		ArrayList<String> row = new ArrayList<String>();
+		ArrayList<Integer> row = new ArrayList<Integer>();
 		for (int i=0; i<values.length; i++) {
 			values[i].replaceAll(" ", "");
-			row.add(values[i]);
+			validateNum(values[i],row);
 		}
 		
 		return row;
@@ -149,7 +146,28 @@ public class InputParser {
 			list.add(num);
 		} catch (NumberFormatException nfe) {
 			System.out.println("Error while parsing input file");
+			System.exit(0);
 		}
 	}
+	
+//	// Add to arraylist if able to parse number string
+//	private ArrayList<ArrayList<Integer>> stringListToInt(ArrayList<ArrayList<String>> list) {
+//		ArrayList<ArrayList<Integer>> intList = new ArrayList<ArrayList<Integer>>();
+//		try {
+//			for (int i=0; i<list.size(); i++) {
+//				ArrayList<String> row = list.get(i);
+//				intList.add(new ArrayList<Integer>());
+//				for (int j=0; j<row.size(); j++) {
+//					int num = Integer.parseInt(row.get(j));
+//					intList.get(i).set(j,num);
+//				}
+//			}
+//		} catch (NumberFormatException nfe) {
+//			System.out.println("Error while parsing input file");
+//			System.exit(0);
+//		}
+//		return intList;
+//	}
 	  
 }
+ 
