@@ -52,6 +52,9 @@ public class Scheduler {
 			System.out.println("Error while parsing input file");
 		}
 		
+		//if solution != empty { Output o = new Output(outputFileName, solution, quality); }
+		//else { Output o = new Output(outputFileName); }
+		//o.print();
 	}
 	
 	public void printLists() {
