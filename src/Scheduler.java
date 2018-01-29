@@ -13,6 +13,9 @@ public class Scheduler {
 	private ArrayList<ArrayList<String>> tooNearPenalties = new ArrayList<ArrayList<String>>();
 	private ArrayList<ArrayList<Integer>> machinePenalties = new ArrayList<ArrayList<Integer>>();
 	
+	private static String inputFileName;
+	private static String outputFileName;
+	
 	// Getter methods
 	public ArrayList<String> getMachines() { return machines; }
 	public ArrayList<String> getTasks() { return tasks;	}
@@ -30,12 +33,19 @@ public class Scheduler {
 	public void setTooNearPenalties(ArrayList<ArrayList<String>> list) { tooNearPenalties = list; }
 	public void setMachinePenalties(ArrayList<ArrayList<Integer>> list) { machinePenalties = list; }
 
-
+	//Command line args assumes input filename is first argument and output is second any other is not used
 	public static void main(String[] args) {
+		try {
+			inputFileName = args[0];
+			outputFileName = args[1];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			System.out.println("Error while determining input and output files");
+			System.exit(0);
+		}
 		Scheduler scheduler = new Scheduler();
 		
 		// Parse data into lists
-		InputParser parser = new InputParser("src/test.txt", scheduler);
+		InputParser parser = new InputParser(inputFileName, scheduler);
 		try {
 			parser.parseData();
 		} catch (IOException ioe) {

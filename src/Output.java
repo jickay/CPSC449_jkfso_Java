@@ -11,17 +11,20 @@ import java.io.PrintWriter;
  */
 
 public class Output {
-	public String[] solution;
-	public int quality;
+	private String[] solution;
+	private int quality;
+	private String filename;
 	
-	public Output(String[] sol, int qual) {
+	public Output(String outputFilename, String[] sol, int qual) {
 		solution = sol;
 		quality = qual;
+		filename = outputFilename;
 	}
 	
-	public Output() {
+	public Output(String outputFilename) {
 		solution = new String[0];
 		quality = 0;
+		filename = outputFilename;
 	}
 	
 /* This method takes two arguments, a String array that should contain 
@@ -34,7 +37,7 @@ public class Output {
 	public void print() {
 		PrintWriter writer = null;
 		try {
-			writer = new PrintWriter("Output.txt");
+			writer = new PrintWriter(filename);
 		}
 		catch (FileNotFoundException fnfe) {
 			System.out.println("fnf");
