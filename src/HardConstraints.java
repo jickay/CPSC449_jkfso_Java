@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class HardConstraints {
-	public ArrayList<ArrayList<String>> returnList;
+	public ArrayList<ArrayList<String>> returnList = new ArrayList<ArrayList<String>>();
 	
 	// Currently only prints console error message
 	public ArrayList<ArrayList<String>> TooNear(ArrayList<ArrayList<String>> forcedPairs, ArrayList<ArrayList<String>> tooNear) {
@@ -29,6 +29,27 @@ public class HardConstraints {
 									System.out.println("Invalid forced pairs + near pairs");
 								}
 							}
+						}
+						ArrayList<String> ip = new ArrayList<String>();
+						if (task.equals(tooNear.get(j).get(0))) {
+							if ((machine + 1) == 9) {
+								ip.add("1");
+							}
+							else {
+								ip.add(Integer.toString(machine + 1));
+							}
+							ip.add(tooNear.get(j).get(1));
+							returnList.add(ip);
+						}
+						else if (task.equals(tooNear.get(j).get(1))) {
+							if ((machine - 1) == 0) {
+								ip.add("8");
+							}
+							else {
+								ip.add(Integer.toString(machine - 1));
+							}
+							ip.add(tooNear.get(j).get(0));
+							returnList.add(ip);
 						}
 					}
 				}
