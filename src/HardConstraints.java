@@ -57,4 +57,18 @@ public class HardConstraints {
 		}
 		return returnList;
 	}
+	
+	public ArrayList<ArrayList<String>> eliminatePairs(ArrayList<ArrayList<String>> grid, ArrayList<ArrayList<String>> pairList) {
+		for (int i = 0; i < pairList.size(); i++) {
+			for (int j = 0; j < grid.size(); j++) {
+				if (grid.get(j).get(0).equals(pairList.get(i).get(0)) && grid.get(j).get(1).equals(pairList.get(i).get(1))) {
+					ArrayList<String> neg1 = new ArrayList<String>();
+					neg1.add("-1");
+					neg1.add("-1");
+					grid.set(j, neg1);
+				}
+			}
+		}
+		return grid;
+	}
 }
