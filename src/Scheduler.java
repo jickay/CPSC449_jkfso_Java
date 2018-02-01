@@ -13,13 +13,11 @@ public class Scheduler {
 	private ArrayList<ArrayList<String>> tooNearPenalties = new ArrayList<ArrayList<String>>();
 	private ArrayList<ArrayList<Integer>> machinePenalties = new ArrayList<ArrayList<Integer>>();
 	
-<<<<<<< HEAD
 	private ArrayList<String> closedPairs = new ArrayList<String>();
 	private String[] finishedPairs = new String[8];
-=======
+
 	private static String inputFileName;
 	private static String outputFileName;
->>>>>>> 7f8bb19793a3c2079396f88bb96e2ebdfaa69d2e
 	
 	// Getter methods
 	public ArrayList<String> getMachines() { return machines; }
