@@ -13,9 +13,14 @@ public class Scheduler {
 	private ArrayList<ArrayList<String>> tooNearPenalties = new ArrayList<ArrayList<String>>();
 	private ArrayList<ArrayList<Integer>> machinePenalties = new ArrayList<ArrayList<Integer>>();
 	
+	private ArrayList<String> closedPairs = new ArrayList<String>();
+	private String[] finishedPairs = new String[8];
+	
 	// Getter methods
 	public ArrayList<String> getMachines() { return machines; }
 	public ArrayList<String> getTasks() { return tasks;	}
+	public ArrayList<String> getClosed() { return closedPairs; }
+	public String[] getFinished() { return finishedPairs; }
 
 	public ArrayList<ArrayList<String>> getForcedPairs() { ArrayList<ArrayList<String>> copy = forcedPairs; return copy; }
 	public ArrayList<ArrayList<String>> getForbiddenPairs() { ArrayList<ArrayList<String>> copy = forbiddenPairs; return copy; }
