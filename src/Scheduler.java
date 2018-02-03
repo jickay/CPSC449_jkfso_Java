@@ -63,12 +63,6 @@ public class Scheduler {
 			System.out.println("Error while parsing input file");
 		}
 		
-<<<<<<< HEAD
-		HardConstraints_J hc = new HardConstraints_J();
-		hc.makeForcedPairs(scheduler);
-		hc.makeForbiddenPairs(scheduler);
-		
-=======
 		// Complete hard constraints
 		HardConstraints hc = new HardConstraints();
 		scheduler.setForcedPairs(hc.forcedPartialAssignment(scheduler.getForcedPairs()));
@@ -88,7 +82,6 @@ public class Scheduler {
 		//if solution != empty { Output o = new Output(outputFileName, solution, quality); }
 		//else { Output o = new Output(outputFileName); }
 		//o.print();
->>>>>>> origin/master
 	}
 	
 	public void printLists() {

@@ -1,0 +1,5 @@
+Name:
+test3-21
+
+forced partial assignment:
+(1,Z)

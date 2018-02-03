@@ -1,0 +1,28 @@
+Name:
+test9
+
+forced partial assignment:
+(1,A)
+(2,A)
+(3,A)
+(4,A)
+(5,A)
+(6,A)
+(7,A)
+(8,A)
+
+forbidden machine:
+
+too-near tasks:
+
+machine penalties:
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+
+too-near penalities

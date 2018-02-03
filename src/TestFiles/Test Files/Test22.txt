@@ -1,0 +1,7 @@
+Name:
+test22
+
+forced partial assignment:
+
+forbidden machine:
+(1,Z)

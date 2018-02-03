@@ -1,0 +1,27 @@
+Name:
+test20
+
+forced partial assignment:
+(1,A)
+(1,B)
+
+forbidden machine:
+(A,A)
+(Z,1)
+(7,1000)
+(5,5)
+(9,B)
+
+too-near tasks:
+
+machine penalties:
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+
+too-near penalities
