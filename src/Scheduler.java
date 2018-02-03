@@ -13,9 +13,14 @@ public class Scheduler {
 	private ArrayList<ArrayList<String>> tooNearPenalties = new ArrayList<ArrayList<String>>();
 	private ArrayList<ArrayList<Integer>> machinePenalties = new ArrayList<ArrayList<Integer>>();
 	
+	private String[] finishedPairs = new String[8];
+	private ArrayList<ArrayList<String>> closedPairs = new ArrayList<ArrayList<String>>();
+	
 	// Getter methods
 	public ArrayList<String> getMachines() { return machines; }
 	public ArrayList<String> getTasks() { return tasks;	}
+	public String[] getFinished() { return finishedPairs; }
+	public ArrayList<ArrayList<String>> getClosed() { return closedPairs; }
 
 	public ArrayList<ArrayList<String>> getForcedPairs() { ArrayList<ArrayList<String>> copy = forcedPairs; return copy; }
 	public ArrayList<ArrayList<String>> getForbiddenPairs() { ArrayList<ArrayList<String>> copy = forbiddenPairs; return copy; }
@@ -33,6 +38,9 @@ public class Scheduler {
 
 	public static void main(String[] args) {
 		Scheduler scheduler = new Scheduler();
+		for (int i=0; i<8; i++) {
+			scheduler.closedPairs.add(new ArrayList<String>());
+		}
 		
 		// Parse data into lists
 		InputParser parser = new InputParser("src/test.txt", scheduler);
@@ -42,6 +50,10 @@ public class Scheduler {
 			System.out.println("Error while parsing input file");
 		}
 		
+		HardConstraints_J hc = new HardConstraints_J();
+		hc.makeForcedPairs(scheduler);
+		hc.makeForbiddenPairs(scheduler);
+		
 	}
 	
 	public void printLists() {
@@ -50,7 +62,9 @@ public class Scheduler {
 		printList(tooNearInvalid);
 		printList(tooNearPenalties);
 		printListInts(machinePenalties);
+		
 	}
+
 	
 	private void printList(ArrayList<ArrayList<String>> list) {
 		for (int i=0; i<list.size(); i++) {
