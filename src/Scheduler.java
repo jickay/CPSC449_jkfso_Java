@@ -18,12 +18,15 @@ public class Scheduler {
 
 	private static String inputFileName;
 	private static String outputFileName;
+
 	
 	// Getter methods
 	public ArrayList<String> getMachines() { return machines; }
 	public ArrayList<String> getTasks() { return tasks;	}
+
 	public ArrayList<String> getClosed() { return closedPairs; }
 	public String[] getFinished() { return finishedPairs; }
+
 
 	public ArrayList<ArrayList<String>> getForcedPairs() { ArrayList<ArrayList<String>> copy = forcedPairs; return copy; }
 	public ArrayList<ArrayList<String>> getForbiddenPairs() { ArrayList<ArrayList<String>> copy = forbiddenPairs; return copy; }
@@ -48,6 +51,9 @@ public class Scheduler {
 			System.exit(0);
 		}
 		Scheduler scheduler = new Scheduler();
+		for (int i=0; i<8; i++) {
+			scheduler.closedPairs.add(new ArrayList<String>());
+		}
 		
 		// Parse data into lists
 		InputParser parser = new InputParser(inputFileName, scheduler);
@@ -57,6 +63,12 @@ public class Scheduler {
 			System.out.println("Error while parsing input file");
 		}
 		
+<<<<<<< HEAD
+		HardConstraints_J hc = new HardConstraints_J();
+		hc.makeForcedPairs(scheduler);
+		hc.makeForbiddenPairs(scheduler);
+		
+=======
 		// Complete hard constraints
 		HardConstraints hc = new HardConstraints();
 		scheduler.setForcedPairs(hc.forcedPartialAssignment(scheduler.getForcedPairs()));
@@ -76,6 +88,7 @@ public class Scheduler {
 		//if solution != empty { Output o = new Output(outputFileName, solution, quality); }
 		//else { Output o = new Output(outputFileName); }
 		//o.print();
+>>>>>>> origin/master
 	}
 	
 	public void printLists() {
@@ -84,7 +97,9 @@ public class Scheduler {
 		printList(tooNearInvalid);
 		printList(tooNearPenalties);
 		printListInts(machinePenalties);
+		
 	}
+
 	
 	private void printList(ArrayList<ArrayList<String>> list) {
 		for (int i=0; i<list.size(); i++) {
