@@ -92,7 +92,8 @@ public class Scheduler {
 		String[] solution = scheduler.getFinished();
 		int quality = sc.getTotalPenalties();
 		if (solution.length > 0) { 
-			Output o = new Output(outputFileName, solution, quality); 
+			Output o = new Output(outputFileName, solution, quality);
+			o.print();
 		} else { 
 			Output o = new Output(outputFileName); 
 			o.print(); 

@@ -105,22 +105,26 @@ public class SoftConstraints {
 			if (taskLetter == leftTask) {
 				// If at machine 8, check machine 0
 				machine = machine==7? 0 : machine+1;
+				// Get actual task Letter for neighbor machine
 				int tooNearTask = matches[machine];
 				String tooNearLetter = "";
 				if (tooNearTask != -1) {
 					tooNearLetter = tasks.get(matches[machine]);
 				}
+				// If is right neighbor, add penalty
 				if (tooNearLetter == rightTask) {
 					penalty = possiblePenalty;
 				}
 			} else if (taskLetter == rightTask) {
 				// If at machine 0, check machine 7
 				machine = machine==0? 7 : machine-1;
+				// Get actual task Letter for neighbor machine
 				int tooNearTask = matches[machine];
 				String tooNearLetter = "";
 				if (tooNearTask != -1) {
 					tooNearLetter = tasks.get(matches[machine]);
 				}
+				// If is left neighbor, add penalty
 				if (tooNearLetter == leftTask) {
 					penalty = possiblePenalty;
 				}
@@ -139,12 +143,14 @@ public class SoftConstraints {
 		return machine;
 	}
 	
+	// Check for any additional too-near invalid pairs and add to forbidden list
 	private void checkTooNearInvalid(Scheduler s, HardConstraints hc,
 			ArrayList<String> machines, ArrayList<String> tasks, int mach, int task) {
+		// Set up data structures
 		ArrayList<ArrayList<String>> newPair = new ArrayList<ArrayList<String>>();
 		ArrayList<String> pair = new ArrayList<String>() {{Arrays.asList(machines.get(mach),tasks.get(task));}};
 		ArrayList<ArrayList<String>> tooNearConditions = s.getTooNearInvalid();
-	
+		// Add any new invalid pairs to forbidden list
 		ArrayList<ArrayList<String>> newForbidden = hc.tooNear(newPair, tooNearConditions);
 		hc.addForbidden(s.getForbiddenPairs(), newForbidden);
 	}

@@ -44,7 +44,7 @@ public class Output {
 			writer.print("No valid solution possible!");
 		}
 		else {
-			writer.print("\"Solution\"");
+			writer.print("\"Solution\" ");
 			for (int i=0; i<solution.length; i++) {
 				writer.print(solution[i]);
 				writer.print(" ");
