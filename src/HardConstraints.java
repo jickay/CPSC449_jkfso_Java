@@ -3,6 +3,82 @@ import java.util.ArrayList;
 public class HardConstraints {
 	public ArrayList<ArrayList<String>> returnList = new ArrayList<ArrayList<String>>();
 	
+	// This method checks for machines and tasks that have been paired more than once.
+    // returns true if no repetitions found. Prints error message and terminates execution otherwise.
+	public ArrayList<ArrayList<String>> forcedPartialAssignment(ArrayList<ArrayList<String>> forcedPairs) {
+        // Takes one input. The forced partial list that has been parsed.
+        ArrayList<ArrayList<String>> input = forcedPairs;  // check type
+		
+        // check length, if more than 8 return error
+        if(input.size() > 8) {
+            System.out.println("partial assignment error");
+            System.exit(0);
+        }
+        
+        for(int i = 0; i < input.size(); i++) {
+            
+            String [] machineArray = new String[input.size()]; // length of array = number of elements in linked list
+            String [] taskArray = new String[input.size()]; // length of array = number of elements in linked list
+
+            machineArray[i] = input.get(i).get(0); // machine from the i'th pair is stored in an array
+            taskArray[i] = input.get(i).get(1); // task from the i'th pair is stored in an array
+        
+		
+            // Check for doubles if more than one forced pair
+            if(i > 0) {
+                
+                //	here we check if machine[i] is already in our array
+                for(int check = i - 1; check >= 0; check--) {
+                    // if machine[i] is in the array return error
+                    if(machineArray[i] == machineArray[check]) {
+                        System.out.println("partial assignment error");
+                        System.exit(0);
+                    }
+                    
+                    // if task[i] is in the array return error
+                    if(taskArray[i] == taskArray[check]) {
+                        System.out.println("partial assignment error");
+                        System.exit(0);
+                    }
+                }
+            }
+        }
+            
+        return input;
+	}
+	
+    // This method compares pairs in forcedPairs to pairs in closedPairs
+    // returns true if no repetitions found. Prints error message and terminates execution otherwise.
+	public ArrayList<ArrayList<String>> forbiddenMachine(ArrayList<ArrayList<String>> forcedPairs, ArrayList<ArrayList<String>> closedPairs) {
+        // this function takes in two inputs, the forced pairs list and closed/forbidden pairs list.        
+        ArrayList<ArrayList<String>> forcedList = forcedPairs;
+        ArrayList<ArrayList<String>> closedList = closedPairs;
+        
+        String tempForcedMachine;
+        String tempForcedTask;
+        String tempClosedMachine;
+        String tempClosedTask;
+        
+        // Check if forbidden list conflicts with forced list
+        for(int i = 0; i < forcedList.size(); i++) {
+            tempForcedMachine = forcedList.get(i).get(0); // machine in i'th pair from forcedPairs
+            tempForcedTask = forcedList.get(i).get(1); // task in i'th pair from forcedPairs
+            
+            for(int j = 0; j < closedList.size(); j++) {
+                tempClosedMachine = closedList.get(j).get(0); // machine in j'th pair from closedPairs
+                tempClosedTask = closedList.get(j).get(1); // task in j'th pair from closedPairs
+                
+                // if i'th forced pair is == to j'th closed pair then return error
+                if(tempForcedMachine == tempClosedMachine && tempForcedTask == tempClosedTask) {
+                    System.out.println("list invalid");
+                    System.exit(0);
+                }
+            }
+        }
+        // Now we have verified our forced partial assignment list.
+        return closedList;
+	}
+	
 	// Currently only prints console error message
 	public ArrayList<ArrayList<String>> TooNear(ArrayList<ArrayList<String>> forcedPairs, ArrayList<ArrayList<String>> tooNear) {
 		if (forcedPairs.isEmpty()) {

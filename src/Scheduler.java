@@ -57,6 +57,22 @@ public class Scheduler {
 			System.out.println("Error while parsing input file");
 		}
 		
+		// Complete hard constraints
+		HardConstraints hc = new HardConstraints();
+		scheduler.setForcedPairs(hc.forcedPartialAssignment(scheduler.getForcedPairs()));
+		scheduler.setForbiddenPairs(hc.forbiddenMachine(scheduler.getForcedPairs(), scheduler.getForbiddenPairs()));
+		ArrayList<ArrayList<String>> invalidPairs = hc.TooNear(scheduler.getForcedPairs(), scheduler.getTooNearInvalid());
+		for (ArrayList<String> pair : invalidPairs) {
+			ArrayList<ArrayList<String>> fp = scheduler.getForbiddenPairs();
+			fp.add(pair);
+			scheduler.setForbiddenPairs(fp);
+		}
+		
+		// Complete soft constraints
+		SoftConstraints sc = new SoftConstraints();
+		sc.setPenalties(scheduler, hc);
+		
+		
 		//if solution != empty { Output o = new Output(outputFileName, solution, quality); }
 		//else { Output o = new Output(outputFileName); }
 		//o.print();
