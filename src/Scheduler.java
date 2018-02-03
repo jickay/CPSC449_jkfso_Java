@@ -13,14 +13,20 @@ public class Scheduler {
 	private ArrayList<ArrayList<String>> tooNearPenalties = new ArrayList<ArrayList<String>>();
 	private ArrayList<ArrayList<Integer>> machinePenalties = new ArrayList<ArrayList<Integer>>();
 	
+	private ArrayList<String> closedPairs = new ArrayList<String>();
 	private String[] finishedPairs = new String[8];
-	private ArrayList<ArrayList<String>> closedPairs = new ArrayList<ArrayList<String>>();
+
+	private static String inputFileName;
+	private static String outputFileName;
+
 	
 	// Getter methods
 	public ArrayList<String> getMachines() { return machines; }
 	public ArrayList<String> getTasks() { return tasks;	}
+
+	public ArrayList<String> getClosed() { return closedPairs; }
 	public String[] getFinished() { return finishedPairs; }
-	public ArrayList<ArrayList<String>> getClosed() { return closedPairs; }
+
 
 	public ArrayList<ArrayList<String>> getForcedPairs() { ArrayList<ArrayList<String>> copy = forcedPairs; return copy; }
 	public ArrayList<ArrayList<String>> getForbiddenPairs() { ArrayList<ArrayList<String>> copy = forbiddenPairs; return copy; }
@@ -35,25 +41,54 @@ public class Scheduler {
 	public void setTooNearPenalties(ArrayList<ArrayList<String>> list) { tooNearPenalties = list; }
 	public void setMachinePenalties(ArrayList<ArrayList<Integer>> list) { machinePenalties = list; }
 
-
+	//Command line args assumes input filename is first argument and output is second any other is not used
 	public static void main(String[] args) {
+		try {
+			inputFileName = args[0];
+			outputFileName = args[1];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			System.out.println("Error while determining input and output files");
+			System.exit(0);
+		}
 		Scheduler scheduler = new Scheduler();
 		for (int i=0; i<8; i++) {
 			scheduler.closedPairs.add(new ArrayList<String>());
 		}
 		
 		// Parse data into lists
-		InputParser parser = new InputParser("src/test.txt", scheduler);
+		InputParser parser = new InputParser(inputFileName, scheduler);
 		try {
 			parser.parseData();
 		} catch (IOException ioe) {
 			System.out.println("Error while parsing input file");
 		}
 		
+<<<<<<< HEAD
 		HardConstraints_J hc = new HardConstraints_J();
 		hc.makeForcedPairs(scheduler);
 		hc.makeForbiddenPairs(scheduler);
 		
+=======
+		// Complete hard constraints
+		HardConstraints hc = new HardConstraints();
+		scheduler.setForcedPairs(hc.forcedPartialAssignment(scheduler.getForcedPairs()));
+		scheduler.setForbiddenPairs(hc.forbiddenMachine(scheduler.getForcedPairs(), scheduler.getForbiddenPairs()));
+		ArrayList<ArrayList<String>> invalidPairs = hc.TooNear(scheduler.getForcedPairs(), scheduler.getTooNearInvalid());
+		for (ArrayList<String> pair : invalidPairs) {
+			ArrayList<ArrayList<String>> fp = scheduler.getForbiddenPairs();
+			fp.add(pair);
+			scheduler.setForbiddenPairs(fp);
+		}
+		
+		// Complete soft constraints
+		SoftConstraints sc = new SoftConstraints();
+		sc.setPenalties(scheduler, hc);
+		
+		
+		//if solution != empty { Output o = new Output(outputFileName, solution, quality); }
+		//else { Output o = new Output(outputFileName); }
+		//o.print();
+>>>>>>> origin/master
 	}
 	
 	public void printLists() {

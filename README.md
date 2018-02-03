@@ -3,7 +3,7 @@ group assignment, Java version
 
 Parts to be completed:
   1. Console commands to run program and designate input/output files [NOT DONE / Scott]
-  2. Read and parse data from file [IN PROGRESS / Jacky]
+  2. Read and parse data from file [DONE(needs testing) / Jacky]
       - make sure to store each section as appropriate data types
       - check any possible errors at this stage
   3. Hard constraints [NOT DONE / Khalid]
