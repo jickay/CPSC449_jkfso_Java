@@ -3,10 +3,10 @@ import java.io.PrintWriter;
 
 /* This class is for printing the output solution to a file.
  * To use to print a solution type:
- * 		Output op = new Output(testSol, testQual);
+ * 		Output op = new Output(outputfilename, testSol, testQual);
 		op.print();
 	To print that there is no solution:
-		Output op = new Output();
+		Output op = new Output(outputfilename);
 		op.print();
  */
 
@@ -27,12 +27,10 @@ public class Output {
 		filename = outputFilename;
 	}
 	
-/* This method takes two arguments, a String array that should contain 
- * the eight tasks in order for each machine (first task in list is assigned
- * to the machine 1, second task to machine 2, etc), and an int representing
- * the quality of the solution.
- * 
- * It writes this information to a text file named Output
+/* Creates a new text document using the String filename as the title. If there is
+ * a solution specified when the instance is created it will print it in the same
+ * format as given on the website. If no solution is given it prints that there is
+ * no solution
  */
 	public void print() {
 		PrintWriter writer = null;
