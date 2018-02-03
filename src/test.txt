@@ -23,5 +23,5 @@ machine penalties:
 7 7 7 7 7 7 7 7
 
 too-near penalities
-(C,D)
-(F,G)
+(C,D,1)
+(F,G,2)

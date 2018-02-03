@@ -47,7 +47,7 @@ public class Output {
 		}
 		else {
 			writer.print("\"Solution\"");
-			for (int i=0; i<solution.length;i++) {
+			for (int i=0; i<solution.length; i++) {
 				writer.print(solution[i]);
 				writer.print(" ");
 			}

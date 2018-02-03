@@ -14,7 +14,7 @@ public class Scheduler {
 	private ArrayList<ArrayList<Integer>> machinePenalties = new ArrayList<ArrayList<Integer>>();
 	
 	private ArrayList<String> closedPairs = new ArrayList<String>();
-	private String[] finishedPairs = new String[9];
+	private String[] finishedPairs = new String[8];
 
 	private static String inputFileName;
 	private static String outputFileName;
@@ -27,7 +27,6 @@ public class Scheduler {
 	public ArrayList<String> getClosed() { return closedPairs; }
 	public String[] getFinished() { return finishedPairs; }
 
-
 	public ArrayList<ArrayList<String>> getForcedPairs() { ArrayList<ArrayList<String>> copy = forcedPairs; return copy; }
 	public ArrayList<ArrayList<String>> getForbiddenPairs() { ArrayList<ArrayList<String>> copy = forbiddenPairs; return copy; }
 	public ArrayList<ArrayList<String>> getTooNearInvalid() { ArrayList<ArrayList<String>> copy = tooNearInvalid; return copy; }
@@ -35,6 +34,8 @@ public class Scheduler {
 	public ArrayList<ArrayList<Integer>> getMachinePenalties() { ArrayList<ArrayList<Integer>> copy = machinePenalties; return copy; }
 	
 	// Setter methods
+	public void setFinished(String[] matches) { finishedPairs = matches; }
+	
 	public void setForcedPairs(ArrayList<ArrayList<String>> list) { forcedPairs = list; }
 	public void setForbiddenPairs(ArrayList<ArrayList<String>> list) { forbiddenPairs = list; }
 	public void setTooNearInvalid(ArrayList<ArrayList<String>> list) { tooNearInvalid = list; }
@@ -43,6 +44,11 @@ public class Scheduler {
 
 	//Command line args assumes input filename is first argument and output is second any other is not used
 	public static void main(String[] args) {
+		// Run test cases
+//				TestIterator test = new TestIterator();
+//				test.runTests();
+				
+		// Get input arguments from console
 		try {
 			inputFileName = args[0];
 			outputFileName = args[1];
@@ -50,6 +56,8 @@ public class Scheduler {
 			System.out.println("Error while determining input and output files");
 			System.exit(0);
 		}
+		
+		// Create start conditions
 		Scheduler scheduler = new Scheduler();
 		for (int i=0; i<8; i++) {
 			scheduler.closedPairs.addAll(new ArrayList<String>());
@@ -67,35 +75,41 @@ public class Scheduler {
 		HardConstraints hc = new HardConstraints();
 		scheduler.setForcedPairs(hc.forcedPartialAssignment(scheduler.getForcedPairs()));
 		scheduler.setForbiddenPairs(hc.forbiddenMachine(scheduler.getForcedPairs(), scheduler.getForbiddenPairs()));
-		ArrayList<ArrayList<String>> invalidPairs = hc.TooNear(scheduler.getForcedPairs(), scheduler.getTooNearInvalid());
-		for (ArrayList<String> pair : invalidPairs) {
-			ArrayList<ArrayList<String>> fp = scheduler.getForbiddenPairs();
-			fp.add(pair);
-			scheduler.setForbiddenPairs(fp);
+		ArrayList<ArrayList<String>> invalidPairs = hc.tooNear(scheduler.getForcedPairs(), scheduler.getTooNearInvalid());
+		hc.addForbidden(scheduler.getForbiddenPairs(), invalidPairs);
+		
+		// Create simple array of matches
+		for (ArrayList<String> forced : scheduler.getForcedPairs()) {
+			int mach = Integer.parseInt(forced.get(0));
+			scheduler.getFinished()[mach] = forced.get(1);
 		}
 		
 		// Complete soft constraints
 		SoftConstraints sc = new SoftConstraints();
-		sc.setPenalties(scheduler, hc);
-		
-		// Run test cases
-		TestIterator test = new TestIterator();
-		test.runTests(args);
+		scheduler.setFinished(sc.setPenalties(scheduler, hc));
 		
 		// Generate output file
 		String[] solution = scheduler.getFinished();
-		int quality = Integer.parseInt(solution[9]);
-		if (solution.length > 0) { Output o = new Output(outputFileName, solution, quality); }
-		else { Output o = new Output(outputFileName); o.print(); }
+		int quality = sc.getTotalPenalties();
+		if (solution.length > 0) { 
+			Output o = new Output(outputFileName, solution, quality); 
+		} else { 
+			Output o = new Output(outputFileName); 
+			o.print(); 
+		}
 	}
 	
 	public void printLists() {
+		System.out.println("Forced");
 		printList(forcedPairs);
+		System.out.println("Forbidden");
 		printList(forbiddenPairs);
+		System.out.println("TooNearInvalid");
 		printList(tooNearInvalid);
+		System.out.println("TooNearPenalties");
 		printList(tooNearPenalties);
+		System.out.println("PenaltyGrid");
 		printListInts(machinePenalties);
-		
 	}
 
 	

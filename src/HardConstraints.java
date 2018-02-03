@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class HardConstraints {
-	public ArrayList<ArrayList<String>> returnList = new ArrayList<ArrayList<String>>();
+	
 	
 	// This method checks for machines and tasks that have been paired more than once.
     // returns true if no repetitions found. Prints error message and terminates execution otherwise.
@@ -80,58 +80,65 @@ public class HardConstraints {
 	}
 	
 	// Currently only prints console error message
-	public ArrayList<ArrayList<String>> TooNear(ArrayList<ArrayList<String>> forcedPairs, ArrayList<ArrayList<String>> tooNear) {
+	public ArrayList<ArrayList<String>> tooNear(ArrayList<ArrayList<String>> forcedPairs, ArrayList<ArrayList<String>> tooNear) {
+		ArrayList<ArrayList<String>> returnList = new ArrayList<ArrayList<String>>();
+		
 		if (forcedPairs.isEmpty()) {
 			return returnList;
 		}
-		else {
-			for (int i = 0; i < forcedPairs.size(); i++) {
-				//Get pairing in list of forced pairs
-				ArrayList<String> pairing = forcedPairs.get(i);
-				int machine = Integer.parseInt(pairing.get(0));
-				String task = pairing.get(1);
-				//For each pairing in tooNear list, check if forced pair task is the same
-				for (int j = 0; j < tooNear.size(); j++) {
-					if (task.equals(tooNear.get(j).get(0)) || task.equals(tooNear.get(j).get(1))) {
-						//If tasks are equal search forced pair list for new pairing with machine i+1
-						for (int k = 0; k < forcedPairs.size(); k++) {
-							ArrayList<String> pairingPlus = forcedPairs.get(k);
-							int machinePlus = Integer.parseInt(pairingPlus.get(0));
-							String taskPlus = pairingPlus.get(1);
-							// If machine of the two pairings are i and i+1
-							if (machinePlus == machine+1 || (machine == 8 && machinePlus == 1)) {
-								// If task of new machine i+1 is in the too near pair print error
-								if (taskPlus.equals(tooNear.get(j).get(0)) || taskPlus.equals(tooNear.get(j).get(1))) {
-									System.out.println("Invalid forced pairs + near pairs");
-								}
+		
+		for (int i = 0; i < forcedPairs.size(); i++) {
+			//Get pairing in list of forced pairs
+			ArrayList<String> pairing = forcedPairs.get(i);
+			int machine = Integer.parseInt(pairing.get(0));
+			String task = pairing.get(1);
+			//For each pairing in tooNear list, check if forced pair task is the same
+			for (int j = 0; j < tooNear.size(); j++) {
+				if (task.equals(tooNear.get(j).get(0)) || task.equals(tooNear.get(j).get(1))) {
+					//If tasks are equal search forced pair list for new pairing with machine i+1
+					for (int k = 0; k < forcedPairs.size(); k++) {
+						ArrayList<String> pairingPlus = forcedPairs.get(k);
+						int machinePlus = Integer.parseInt(pairingPlus.get(0));
+						String taskPlus = pairingPlus.get(1);
+						// If machine of the two pairings are i and i+1
+						if (machinePlus == machine+1 || (machine == 8 && machinePlus == 1)) {
+							// If task of new machine i+1 is in the too near pair print error
+							if (taskPlus.equals(tooNear.get(j).get(0)) || taskPlus.equals(tooNear.get(j).get(1))) {
+								System.out.println("Invalid forced pairs + near pairs");
 							}
 						}
-						ArrayList<String> ip = new ArrayList<String>();
-						if (task.equals(tooNear.get(j).get(0))) {
-							if ((machine + 1) == 9) {
-								ip.add("1");
-							}
-							else {
-								ip.add(Integer.toString(machine + 1));
-							}
-							ip.add(tooNear.get(j).get(1));
-							returnList.add(ip);
+					}
+					ArrayList<String> ip = new ArrayList<String>();
+					if (task.equals(tooNear.get(j).get(0))) {
+						if ((machine + 1) == 9) {
+							ip.add("1");
 						}
-						else if (task.equals(tooNear.get(j).get(1))) {
-							if ((machine - 1) == 0) {
-								ip.add("8");
-							}
-							else {
-								ip.add(Integer.toString(machine - 1));
-							}
-							ip.add(tooNear.get(j).get(0));
-							returnList.add(ip);
+						else {
+							ip.add(Integer.toString(machine + 1));
 						}
+						ip.add(tooNear.get(j).get(1));
+						returnList.add(ip);
+					}
+					else if (task.equals(tooNear.get(j).get(1))) {
+						if ((machine - 1) == 0) {
+							ip.add("8");
+						}
+						else {
+							ip.add(Integer.toString(machine - 1));
+						}
+						ip.add(tooNear.get(j).get(0));
+						returnList.add(ip);
 					}
 				}
 			}
 		}
 		return returnList;
+	}
+	
+	public void addForbidden(ArrayList<ArrayList<String>> forbidden, ArrayList<ArrayList<String>> list) {
+		for (ArrayList<String> pair : list) {
+			forbidden.add(pair);
+		}
 	}
 	
 	public ArrayList<ArrayList<String>> eliminatePairs(ArrayList<ArrayList<String>> grid, ArrayList<ArrayList<String>> pairList) {
@@ -146,5 +153,15 @@ public class HardConstraints {
 			}
 		}
 		return grid;
+	}
+	
+	public boolean isValidPair(ArrayList<ArrayList<String>> forbidden, String mach, String task) {
+		boolean isValid = true;
+		for (ArrayList<String> pairs : forbidden) {
+			if (mach == pairs.get(0) && task == pairs.get(1)) {
+				isValid = false;
+			}
+		}
+		return isValid;
 	}
 }

@@ -8,23 +8,29 @@ import java.util.Scanner;
  */
 public class TestIterator{
 	
-	public static void runTests(String[] args){
+	public void runTests(){
 
 		Scanner keyboard = new Scanner(System.in);
 		
-		//
-		System.out.println("**STEP 1**: Determine filepath:");
-		System.out.print("Enter the filepath to the tests' folder (no fwd slash at end): ");
-		String filePath = keyboard.nextLine();
-		filePath = filePath + "/test";
-		System.out.println("");	
-			
-		System.out.println("**STEP 2**: Enter the values of the tests:");
-		System.out.print("First test to run: ");
-		int firstTest = keyboard.nextInt();
-		System.out.print("Last test to run: ");
-		int lastTest = keyboard.nextInt();		
-		System.out.println("");	
+		// Set file folder to run
+//		System.out.println("**STEP 1**: Determine filepath:");
+//		System.out.print("Enter the filepath to the tests' folder (no fwd slash at end): ");
+//		String filePath = keyboard.nextLine();
+//		filePath = filePath + "/test";
+//		System.out.println("");
+		
+		String filePath = "/TestFiles/test";
+		
+		// Set range of tests to run through (0 - 45)
+//		System.out.println("**STEP 2**: Enter the values of the tests (0-45):");
+//		System.out.print("First test to run: ");
+//		int firstTest = keyboard.nextInt();
+//		System.out.print("Last test to run: ");
+//		int lastTest = keyboard.nextInt();		
+//		System.out.println("");	
+		
+		int firstTest = 0;
+		int lastTest = 45;
 		
 		System.out.println("RUNNING TESTS #" + firstTest + " THROUGH #" + lastTest);
 		System.out.println("||||||||||||||||||||||||||||");
