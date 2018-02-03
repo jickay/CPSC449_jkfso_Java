@@ -14,7 +14,7 @@ public class Scheduler {
 	private ArrayList<ArrayList<Integer>> machinePenalties = new ArrayList<ArrayList<Integer>>();
 	
 	private ArrayList<String> closedPairs = new ArrayList<String>();
-	private String[] finishedPairs = new String[8];
+	private String[] finishedPairs = new String[9];
 
 	private static String inputFileName;
 	private static String outputFileName;
@@ -52,7 +52,7 @@ public class Scheduler {
 		}
 		Scheduler scheduler = new Scheduler();
 		for (int i=0; i<8; i++) {
-			scheduler.closedPairs.add(new ArrayList<String>());
+			scheduler.closedPairs.addAll(new ArrayList<String>());
 		}
 		
 		// Parse data into lists
@@ -78,10 +78,15 @@ public class Scheduler {
 		SoftConstraints sc = new SoftConstraints();
 		sc.setPenalties(scheduler, hc);
 		
+		// Run test cases
+		TestIterator test = new TestIterator();
+		test.runTests(args);
 		
-		//if solution != empty { Output o = new Output(outputFileName, solution, quality); }
-		//else { Output o = new Output(outputFileName); }
-		//o.print();
+		// Generate output file
+		String[] solution = scheduler.getFinished();
+		int quality = Integer.parseInt(solution[9]);
+		if (solution.length > 0) { Output o = new Output(outputFileName, solution, quality); }
+		else { Output o = new Output(outputFileName); o.print(); }
 	}
 	
 	public void printLists() {
