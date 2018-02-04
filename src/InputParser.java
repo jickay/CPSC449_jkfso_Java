@@ -16,7 +16,7 @@ public class InputParser {
 	private void printList(ArrayList<ArrayList<String>> list) {
 		for (int i=0; i<list.size(); i++) {
 			System.out.println(list.get(i));
-			System.exit(0);
+			//System.exit(0);
 		}
 	}
 	
@@ -43,6 +43,7 @@ public class InputParser {
 	private void checkLabel(BufferedReader reader, String aLine) {
 		// Make lowercase for consistency in case checks
 		String currentLine = aLine.toLowerCase();
+		currentLine = currentLine.trim();
 		// For each label read values based on structure of text
 		switch (currentLine) {
 			case "forced partial assignment:":
@@ -69,11 +70,12 @@ public class InputParser {
 		try {
 			// Keep reading next line unless it is blank or end of file
 			while ((aLine = reader.readLine()) != null && !(aLine.replaceAll(" ", "").isEmpty())) {
+				aLine = aLine.trim();
 				list.add(parseTuples(aLine,tupleType));
 			}
 		} catch (IOException e) {
 			System.out.println("Error while parsing input file");
-			System.exit(0);
+			//System.exit(0);
 		}
 		return list;
 	}
@@ -87,7 +89,7 @@ public class InputParser {
 			}
 		} catch (IOException e) {
 			System.out.println("Error while parsing input file");
-			System.exit(0);
+			//System.exit(0);
 		}
 		return list;
 	}
@@ -107,7 +109,7 @@ public class InputParser {
 					}
 				} else {
 					System.out.println("Invalid machine/task");
-					System.exit(0);
+					//System.exit(0);
 				}
 				break;
 			case "t,t":
@@ -117,7 +119,7 @@ public class InputParser {
 					}
 				} else {
 					System.out.println("Invalid machine/task");
-					System.exit(0);
+					//System.exit(0);
 				}
 				break;
 			default: break;
@@ -146,7 +148,7 @@ public class InputParser {
 			list.add(num);
 		} catch (NumberFormatException nfe) {
 			System.out.println("Error while parsing input file");
-			System.exit(0);
+			//System.exit(0);
 		}
 	}
 	
@@ -164,7 +166,7 @@ public class InputParser {
 //			}
 //		} catch (NumberFormatException nfe) {
 //			System.out.println("Error while parsing input file");
-//			System.exit(0);
+//			//System.exit(0);
 //		}
 //		return intList;
 //	}

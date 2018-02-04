@@ -8,7 +8,7 @@ import java.util.Scanner;
  */
 public class TestIterator{
 	
-	public void runTests(){
+	public static void main(String[] args){
 
 		Scanner keyboard = new Scanner(System.in);
 		
@@ -19,7 +19,7 @@ public class TestIterator{
 //		filePath = filePath + "/test";
 //		System.out.println("");
 		
-		String filePath = "/TestFiles/test";
+		String filePath = "TestFiles/test";
 		
 		// Set range of tests to run through (0 - 45)
 //		System.out.println("**STEP 2**: Enter the values of the tests (0-45):");
@@ -44,11 +44,18 @@ public class TestIterator{
 			testArgs[0] = arg1;
 			testArgs[1] = arg2;
 			
+			System.out.println("||||||||||||||||||||||||||||");
 			System.out.println("RUNNING TEST #" + i + " ---> (" + arg1 + ")");
 			
-			//TODO: Replace line below with typical Scheduler main method; alternate name:
-			//Scheduler.mainMethod(testArgs);
+			Scheduler s = new Scheduler();
+			try {
+				s.mainMethod(testArgs);
+			} catch (IndexOutOfBoundsException iobe) {
+				System.out.println("TEST CAUSES ERROR");
+			}
 			
+			System.out.print("Hit Enter to continue");
+			keyboard.nextLine();
 		}
 	}	
 	

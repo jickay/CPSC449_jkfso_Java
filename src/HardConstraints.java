@@ -12,7 +12,7 @@ public class HardConstraints {
         // check length, if more than 8 return error
         if(input.size() > 8) {
             System.out.println("partial assignment error");
-            System.exit(0);
+            //System.exit(0);
         }
         
         for(int i = 0; i < input.size(); i++) {
@@ -22,23 +22,21 @@ public class HardConstraints {
 
             machineArray[i] = input.get(i).get(0); // machine from the i'th pair is stored in an array
             taskArray[i] = input.get(i).get(1); // task from the i'th pair is stored in an array
-        
 		
             // Check for doubles if more than one forced pair
             if(i > 0) {
-                
                 //	here we check if machine[i] is already in our array
                 for(int check = i - 1; check >= 0; check--) {
                     // if machine[i] is in the array return error
                     if(machineArray[i] == machineArray[check]) {
                         System.out.println("partial assignment error");
-                        System.exit(0);
+                        //System.exit(0);
                     }
                     
                     // if task[i] is in the array return error
                     if(taskArray[i] == taskArray[check]) {
                         System.out.println("partial assignment error");
-                        System.exit(0);
+                        //System.exit(0);
                     }
                 }
             }
@@ -71,7 +69,7 @@ public class HardConstraints {
                 // if i'th forced pair is == to j'th closed pair then return error
                 if(tempForcedMachine == tempClosedMachine && tempForcedTask == tempClosedTask) {
                     System.out.println("list invalid");
-                    System.exit(0);
+                    //System.exit(0);
                 }
             }
         }
@@ -141,18 +139,12 @@ public class HardConstraints {
 		}
 	}
 	
-	public ArrayList<ArrayList<String>> eliminatePairs(ArrayList<ArrayList<String>> grid, ArrayList<ArrayList<String>> pairList) {
-		for (int i = 0; i < pairList.size(); i++) {
-			for (int j = 0; j < grid.size(); j++) {
-				if (grid.get(j).get(0).equals(pairList.get(i).get(0)) && grid.get(j).get(1).equals(pairList.get(i).get(1))) {
-					ArrayList<String> neg1 = new ArrayList<String>();
-					neg1.add("-1");
-					neg1.add("-1");
-					grid.set(j, neg1);
-				}
-			}
+	public void eliminatePairs(ArrayList<ArrayList<Integer>> grid, ArrayList<String> tasks, ArrayList<ArrayList<String>> pairList) {
+		for (ArrayList<String> pair : pairList) {
+			int mach = Integer.parseInt(pair.get(0));
+			int task = tasks.indexOf(pair.get(1));
+			grid.get(mach).set(task, -1);
 		}
-		return grid;
 	}
 	
 	public boolean isValidPair(ArrayList<ArrayList<String>> forbidden, String mach, String task) {

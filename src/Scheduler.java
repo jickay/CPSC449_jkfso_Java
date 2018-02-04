@@ -24,7 +24,6 @@ public class Scheduler {
 	public ArrayList<String> getMachines() { return machines; }
 	public ArrayList<String> getTasks() { return tasks;	}
 
-	public ArrayList<String> getClosed() { return closedPairs; }
 	public String[] getFinished() { return finishedPairs; }
 
 	public ArrayList<ArrayList<String>> getForcedPairs() { ArrayList<ArrayList<String>> copy = forcedPairs; return copy; }
@@ -43,28 +42,27 @@ public class Scheduler {
 	public void setMachinePenalties(ArrayList<ArrayList<Integer>> list) { machinePenalties = list; }
 
 	//Command line args assumes input filename is first argument and output is second any other is not used
-	public static void main(String[] args) {
+	public static void mainMethod(String[] args) {
 		// Run test cases
 //				TestIterator test = new TestIterator();
 //				test.runTests();
 				
 		// Get input arguments from console
-		try {
-			inputFileName = args[0];
-			outputFileName = args[1];
-		} catch (ArrayIndexOutOfBoundsException e) {
-			System.out.println("Error while determining input and output files");
-			System.exit(0);
-		}
+//		try {
+//			inputFileName = args[0];
+//			outputFileName = args[1];
+//		} catch (ArrayIndexOutOfBoundsException e) {
+//			System.out.println("Error while determining input and output files");
+//			System.exit(0);
+//		}
 		
 		// Create start conditions
-		Scheduler scheduler = new Scheduler();
-		for (int i=0; i<8; i++) {
-			scheduler.closedPairs.addAll(new ArrayList<String>());
-		}
+		Scheduler s = new Scheduler();
 		
 		// Parse data into lists
-		InputParser parser = new InputParser(inputFileName, scheduler);
+		inputFileName = args[0];
+		outputFileName = args[1];
+		InputParser parser = new InputParser(inputFileName, s);
 		try {
 			parser.parseData();
 		} catch (IOException ioe) {
@@ -73,30 +71,40 @@ public class Scheduler {
 		
 		// Complete hard constraints
 		HardConstraints hc = new HardConstraints();
-		scheduler.setForcedPairs(hc.forcedPartialAssignment(scheduler.getForcedPairs()));
-		scheduler.setForbiddenPairs(hc.forbiddenMachine(scheduler.getForcedPairs(), scheduler.getForbiddenPairs()));
-		ArrayList<ArrayList<String>> invalidPairs = hc.tooNear(scheduler.getForcedPairs(), scheduler.getTooNearInvalid());
-		hc.addForbidden(scheduler.getForbiddenPairs(), invalidPairs);
+		s.setForcedPairs(hc.forcedPartialAssignment(s.getForcedPairs()));
+		s.setForbiddenPairs(hc.forbiddenMachine(s.getForcedPairs(), s.getForbiddenPairs()));
+		ArrayList<ArrayList<String>> invalidPairs = hc.tooNear(s.getForcedPairs(), s.getTooNearInvalid());
+		hc.addForbidden(s.getForbiddenPairs(), invalidPairs);
+//		hc.eliminatePairs(s.getMachinePenalties(), s.getTasks(), s.getForbiddenPairs());
 		
 		// Create simple array of matches
-		for (ArrayList<String> forced : scheduler.getForcedPairs()) {
-			int mach = Integer.parseInt(forced.get(0));
-			scheduler.getFinished()[mach] = forced.get(1);
+		for (ArrayList<String> forced : s.getForcedPairs()) {
+			int mach = s.getMachines().indexOf(forced.get(0));
+			s.getFinished()[mach] = forced.get(1);
 		}
 		
 		// Complete soft constraints
 		SoftConstraints sc = new SoftConstraints();
-		scheduler.setFinished(sc.setPenalties(scheduler, hc));
+		s.setFinished(sc.setPenalties(s, hc, s.getFinished()));
 		
 		// Generate output file
-		String[] solution = scheduler.getFinished();
+		String[] solution = s.getFinished();
 		int quality = sc.getTotalPenalties();
+		System.out.println("Solution: ");
+		s.printArray(solution);
+		System.out.println("Quality: " + quality);
 		if (solution.length > 0) { 
 			Output o = new Output(outputFileName, solution, quality);
 			o.print();
 		} else { 
 			Output o = new Output(outputFileName); 
 			o.print(); 
+		}
+	}
+	
+	public void printArray(String[] array) {
+		for (int i=0; i<array.length; i++) {
+			System.out.print(array[i] + ", ");
 		}
 	}
 	

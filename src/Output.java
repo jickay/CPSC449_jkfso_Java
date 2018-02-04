@@ -36,8 +36,7 @@ public class Output {
 		PrintWriter writer = null;
 		try {
 			writer = new PrintWriter(filename);
-		}
-		catch (FileNotFoundException fnfe) {
+		} catch (FileNotFoundException fnfe) {
 			System.out.println("fnf");
 		}
 		if (solution.length == 0) {

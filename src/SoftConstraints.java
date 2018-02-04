@@ -4,46 +4,66 @@ import java.util.Arrays;
 public class SoftConstraints {
 	
 	int totalPenalties = 0;
-	String[] finished = new String[8];
+	
 	
 	public int getTotalPenalties() { return totalPenalties; }
 	
-	public String[] setPenalties(Scheduler s, HardConstraints hc) {
-		int[] matches = branchAndBound(s,hc,totalPenalties);
+	// General method to run submethods
+	// DOES NOT TAKE IN PREVIOUS MATCHES YET!
+	public String[] setPenalties(Scheduler s, HardConstraints hc, String[] matches) {
+		// Convert string matches to ints
+		int[] intMatches = new int[matches.length];
 		for (int i=0; i<matches.length; i++) {
-			ArrayList<String> tasks = s.getTasks();
-			finished[i] = tasks.get(matches[i]);
+			String task = matches[i];
+			if (task != null) {
+				intMatches[i] = s.getTasks().indexOf(matches[i]);
+			} else {
+				intMatches[i] = -1;
+			}
 		}
-		return finished;
+		// Run penalty algorithm
+		intMatches = branchAndBound(s,hc,intMatches,totalPenalties);
+		
+		ArrayList<String> tasks = s.getTasks();
+		for (int i=0; i<matches.length; i++) {
+			int taskIndex = intMatches[i];
+			if (taskIndex > -1) {
+				matches[i] = tasks.get(intMatches[i]);
+			}
+		}
+		return matches;
 	}
 	
-	private int[] branchAndBound(Scheduler s, HardConstraints hc, int total) {
+	private int[] branchAndBound(Scheduler s, HardConstraints hc, int[] matches, int total) {
 		ArrayList<ArrayList<Integer>> grid = s.getMachinePenalties();
 		ArrayList<String> machines = s.getMachines();
 		ArrayList<String> tasks = s.getTasks();
 		
-		int[] matches = new int[]{-1,-1,-1,-1,-1,-1,-1,-1};
+//		int[] matches = new int[]{-1,-1,-1,-1,-1,-1,-1,-1};
 		
 		// Find best task for each machine by iterating over possible total penalty scores
-		// when machine[i] is a forced selection
+		// when machine[i] is must be assigned for that machine
 		for (int mach=0; mach<grid.size(); mach++) {
-			ArrayList<Integer> row = grid.get(mach);
-			// Start with first value in row
-			int forcedTask = row.get(0);
-			total = iterateRound(s,mach,0,forcedTask,grid,matches);
-			matches[mach] = 0;
-			// Iterate over row
-			for (int task=1; task<row.size(); task++) {
-				// Check only if spot not taken by previous row
-				// And pairing does not violate too-near invalid pairs
-				if (taskAvailable(matches,task) && hc.isValidPair(s.getForbiddenPairs(), machines.get(mach), tasks.get(task))) {
-					int taskPenalty = row.get(task);
-					int roundTotal = iterateRound(s,mach,task,taskPenalty,grid,matches);
-					if (roundTotal < total) {
-						total = roundTotal;
-						matches[mach] = task;
-						// Add new forbidden pairs for new match
-						checkTooNearInvalid(s,hc,machines,tasks,mach,task);
+			// Only check if machine not already matched
+			if (matches[mach] == -1) {
+				ArrayList<Integer> row = grid.get(mach);
+				// Start with first value in row
+				int forcedTask = row.get(0);
+				total = iterateRound(s,mach,0,forcedTask,grid,matches);
+				matches[mach] = 0;
+				// Iterate over row
+				for (int task=1; task<row.size(); task++) {
+					// Check only if spot not taken by previous row
+					// And pairing does not violate too-near invalid pairs
+					if (taskAvailable(matches,task) && hc.isValidPair(s.getForbiddenPairs(), machines.get(mach), tasks.get(task))) {
+						int taskPenalty = row.get(task);
+						int roundTotal = iterateRound(s,mach,task,taskPenalty,grid,matches);
+						if (roundTotal < total) {
+							total = roundTotal;
+							matches[mach] = task;
+							// Add new forbidden pairs for new match
+							checkTooNearInvalid(s,hc,machines,tasks,mach,task);
+						}
 					}
 				}
 			}
