@@ -17,29 +17,11 @@ public class HardConstraints {
         
         for(int i = 0; i < input.size(); i++) {
             
-            String [] machineArray = new String[input.size()]; // length of array = number of elements in linked list
-            String [] taskArray = new String[input.size()]; // length of array = number of elements in linked list
-
-            machineArray[i] = input.get(i).get(0); // machine from the i'th pair is stored in an array
-            taskArray[i] = input.get(i).get(1); // task from the i'th pair is stored in an array
-		
-            // Check for doubles if more than one forced pair
-            if(i > 0) {
-                //	here we check if machine[i] is already in our array
-                for(int check = i - 1; check >= 0; check--) {
-                    // if machine[i] is in the array return error
-                    if(machineArray[i] == machineArray[check]) {
-                        System.out.println("partial assignment error");
-                        //System.exit(0);
-                    }
-                    
-                    // if task[i] is in the array return error
-                    if(taskArray[i] == taskArray[check]) {
-                        System.out.println("partial assignment error");
-                        //System.exit(0);
-                    }
-                }
-            }
+            	if (input.get(i).get(0) == input.get(i + 1).get(0) || input.get(0).get(i) == input.get(0).get(i + 1)) {
+				System.out.println("Error!");
+				// System.exit(0);
+		}
+            
         }
             
         return input;
