@@ -3,10 +3,10 @@ import java.util.Arrays;
 
 public class SoftConstraints {
 	
-	int totalPenalties = 0;
-	
+	private int totalPenalties = 0;
 	
 	public int getTotalPenalties() { return totalPenalties; }
+	public void setTotalPenalties(int total) { totalPenalties = total; }
 	
 	// General method to run submethods
 	// DOES NOT TAKE IN PREVIOUS MATCHES YET!
@@ -49,7 +49,7 @@ public class SoftConstraints {
 				ArrayList<Integer> row = grid.get(mach);
 				// Start with first value in row
 				int forcedTask = row.get(0);
-				total = iterateRound(s,mach,0,forcedTask,grid,matches);
+				setTotalPenalties(iterateRound(s,mach,0,forcedTask,grid,matches));
 				matches[mach] = 0;
 				// Iterate over row
 				for (int task=1; task<row.size(); task++) {
@@ -59,7 +59,7 @@ public class SoftConstraints {
 						int taskPenalty = row.get(task);
 						int roundTotal = iterateRound(s,mach,task,taskPenalty,grid,matches);
 						if (roundTotal < total) {
-							total = roundTotal;
+							setTotalPenalties(roundTotal);
 							matches[mach] = task;
 							// Add new forbidden pairs for new match
 							checkTooNearInvalid(s,hc,machines,tasks,mach,task);

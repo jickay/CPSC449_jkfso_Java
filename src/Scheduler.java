@@ -42,7 +42,7 @@ public class Scheduler {
 	public void setMachinePenalties(ArrayList<ArrayList<Integer>> list) { machinePenalties = list; }
 
 	//Command line args assumes input filename is first argument and output is second any other is not used
-	public static void mainMethod(String[] args) {
+	public void mainMethod(String[] args) {
 		// Run test cases
 //				TestIterator test = new TestIterator();
 //				test.runTests();
@@ -62,6 +62,7 @@ public class Scheduler {
 		// Parse data into lists
 		inputFileName = args[0];
 		outputFileName = args[1];
+
 		InputParser parser = new InputParser(inputFileName, s);
 		try {
 			parser.parseData();
