@@ -19,7 +19,8 @@ public class TestIterator{
 //		filePath = filePath + "/test";
 //		System.out.println("");
 		
-		String filePath = "src/TestFiles/test";
+		String filePath = "TestFiles/test";
+		
 		
 		// Set range of tests to run through (0 - 45)
 //		System.out.println("**STEP 2**: Enter the values of the tests (0-45):");

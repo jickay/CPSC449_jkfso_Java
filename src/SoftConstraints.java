@@ -49,7 +49,7 @@ public class SoftConstraints {
 				ArrayList<Integer> row = grid.get(mach);
 				// Start with first value in row
 				int forcedTask = row.get(0);
-				setTotalPenalties(iterateRound(s,mach,0,forcedTask,grid,matches));
+				setTotalPenalties(iterateRound(s,mach,0,grid,matches));
 				matches[mach] = 0;
 				// Iterate over row
 				for (int task=1; task<row.size(); task++) {
@@ -57,8 +57,8 @@ public class SoftConstraints {
 					// And pairing does not violate too-near invalid pairs
 					if (taskAvailable(matches,task) && hc.isValidPair(s.getForbiddenPairs(), machines.get(mach), tasks.get(task))) {
 						int taskPenalty = row.get(task);
-						int roundTotal = iterateRound(s,mach,task,taskPenalty,grid,matches);
-						if (roundTotal < total) {
+						int roundTotal = iterateRound(s,mach,task,grid,matches);
+						if (roundTotal < getTotalPenalties()) {
 							setTotalPenalties(roundTotal);
 							matches[mach] = task;
 							// Add new forbidden pairs for new match
@@ -82,15 +82,19 @@ public class SoftConstraints {
 	}
 	
 	private int iterateRound(Scheduler s, 
-			int mach, int forcedTask, int taskPenalty,
+			int mach, int forcedTask,
 			ArrayList<ArrayList<Integer>> grid, int[] matches) {
 		ArrayList<ArrayList<String>> tooNearList = s.getTooNearPenalties();
 		ArrayList<String> tasks = s.getTasks();
 		// Starting values
 		int[] roundMatches = matches;
 		roundMatches[mach] = forcedTask;
-		int totalScore = taskPenalty;
-		// Check all rows below current i
+		// Add all scores of rows up to current mach
+		int roundTotal = 0;
+		for (int i=0; i<=mach; i++) {
+			roundTotal += grid.get(mach).get(roundMatches[i]);
+		}
+		// Check all rows below current mach
 		for (int j=mach+1; j<grid.size(); j++) {
 			ArrayList<Integer> row = grid.get(j);
 			int minValue = row.get(0);
@@ -106,9 +110,9 @@ public class SoftConstraints {
 				}
 			}
 			// Add lowest row value to total
-			totalScore += minValue;
+			roundTotal += minValue;
 		}
-		return totalScore;
+		return roundTotal;
 	}
 	
 	private int tooNearPenalty(ArrayList<String> tasks, int machine, int taskIndex,
