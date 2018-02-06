@@ -63,7 +63,7 @@ public class InputParser {
 				scheduler.setTooNearInvalid(readTupleValues(reader,labels,3,aLine,scheduler.getTooNearInvalid(),"tuples","t,t"));
 				break;
 			case "too-near penalities":
-				scheduler.setTooNearPenalties(readTupleValues(reader,labels,5,aLine,scheduler.getTooNearPenalties(),"tuples","t,t"));
+				scheduler.setTooNearPenalties(readTupleValues(reader,labels,5,aLine,scheduler.getTooNearPenalties(),"tuples","t,t,q"));
 				break;
 			case "machine penalties:":
 				scheduler.setMachinePenalties(readGridValues(reader,labels,4,aLine,scheduler.getMachinePenalties(),"grid","none"));
@@ -155,6 +155,7 @@ public class InputParser {
 			case "t,t":
 				if (scheduler.getTasks().contains(values[0]) && scheduler.getTasks().contains(values[1])) {
 					for (int i=0; i<values.length; i++) {
+						if (i == 2) { validateNum(values[i]); }
 						tuple.add(values[i]);
 					}
 				} else {
@@ -191,6 +192,11 @@ public class InputParser {
 		int num = -1;
 		try {
 			num = Integer.parseInt(numString);
+			// Check if natural number
+			if (num < 0) {
+				System.out.println("Error while parsing input file");
+				//System.exit(0);
+			}
 		} catch (NumberFormatException nfe) {
 			System.out.println("Error while parsing input file");
 			//System.exit(0);
