@@ -1,0 +1,28 @@
+Name:
+test46
+
+forced partial assignment:
+(1,A)
+(2,H)
+(3,B)
+(4,E)
+(5,F)
+(6,G)
+(7,C)
+(8,D)
+
+forbidden machine:
+
+too-near tasks:
+
+machine penalties:
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+
+too-near penalities

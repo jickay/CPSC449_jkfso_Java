@@ -1,0 +1,34 @@
+Name:
+test62
+
+forced partial assignment:
+(1,A)
+(2,B)
+
+(7,G)
+(8,H)
+
+forbidden machine:
+(3,D)
+(3,E)
+(4,E)
+
+too-near tasks:
+(C,A)
+(C,E)
+(C,F)
+(C,G)
+(C,H)
+
+machine penalties:
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+9 9 9 0 9 9 9 9
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+
+too-near penalities
+(B,D,700)

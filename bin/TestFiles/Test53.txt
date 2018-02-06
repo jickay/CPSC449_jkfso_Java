@@ -1,0 +1,67 @@
+Name:
+test53
+
+forced partial assignment:
+
+forbidden machine:
+
+too-near tasks:
+(A,C)
+(A,D)
+(A,E)
+(A,F)
+(A,G)
+
+(B,D)
+(B,E)
+(B,F)
+(B,G)
+(B,D)
+
+(C,A)
+(C,E)
+(C,F)
+(C,G)
+(C,H)
+
+(D,A)
+(D,B)
+(D,F)
+(D,G)
+(D,H)
+
+(E,A)
+(E,B)
+(E,C)
+(E,G)
+(E,H)
+
+(F,A)
+(F,B)
+(F,C)
+(F,D)
+(F,H)
+
+(G,A)
+(G,B)
+(G,C)
+(G,D)
+(G,E)
+
+(H,B)
+(H,C)
+(H,D)
+(H,E)
+(H,F)
+
+machine penalties:
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+
+too-near penalities
