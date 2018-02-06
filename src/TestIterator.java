@@ -23,15 +23,15 @@ public class TestIterator{
 		
 		
 		// Set range of tests to run through (0 - 45)
-//		System.out.println("**STEP 2**: Enter the values of the tests (0-45):");
-//		System.out.print("First test to run: ");
-//		int firstTest = keyboard.nextInt();
-//		System.out.print("Last test to run: ");
-//		int lastTest = keyboard.nextInt();		
-//		System.out.println("");	
-		
-		int firstTest = 0;
-		int lastTest = 45;
+		System.out.println("**STEP 2**: Enter the values of the tests (0-45):");
+		System.out.print("First test to run: ");
+		int firstTest = keyboard.nextInt();
+		System.out.print("Last test to run: ");
+		int lastTest = keyboard.nextInt();		
+		System.out.println("");	
+//		
+//		int firstTest = 0;
+//		int lastTest = 45;
 		
 		System.out.println("RUNNING TESTS #" + firstTest + " THROUGH #" + lastTest);
 		System.out.println("||||||||||||||||||||||||||||");

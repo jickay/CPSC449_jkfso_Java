@@ -36,6 +36,12 @@ public class InputParser {
 	    while ((aLine = reader.readLine()) != null) {
 	    	checkLabel(reader, aLine);
 	    }
+	    // Check if grid is empty
+	    if (scheduler.getMachinePenalties().size() != 8) {
+	    	System.out.println("machine penalty error");
+	    	// System.exit(0);
+	    }
+	    // Print parsed lists
 	    scheduler.printLists();
 	}
 	
