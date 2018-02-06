@@ -92,7 +92,7 @@ public class SoftConstraints {
 		// Add all scores of rows up to current mach
 		int roundTotal = 0;
 		for (int i=0; i<=mach; i++) {
-			roundTotal += grid.get(mach).get(roundMatches[i]);
+			roundTotal += grid.get(roundMatches[i]).get(mach); //grid.get(mach).get(roundMatches[i]);
 		}
 		// Check all rows below current mach
 		for (int j=mach+1; j<grid.size(); j++) {
