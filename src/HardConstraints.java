@@ -11,19 +11,16 @@ public class HardConstraints {
 		
         // check length, if more than 8 return error
         if(input.size() > 8) {
-            System.out.println("partial assignment error");
+            System.out.println("Error, too many forced assignments");
             //System.exit(0);
         }
-        
-        for(int i = 0; i < input.size(); i++) {
-            
-            	if (input.get(i).get(0) == input.get(i + 1).get(0) || input.get(0).get(i) == input.get(0).get(i + 1)) {
-				System.out.println("Error!");
-				// System.exit(0);
-		}
-            
+
+        for(int i = 0; i < input.size()-1; i++) {
+            if (input.get(i).get(0).equals(input.get(i + 1).get(0)) || input.get(i).get(1).equals(input.get(i + 1).get(1))) {
+                System.out.println("Error, double forced assignment!");
+                // System.exit(0);
+            }
         }
-            
         return input;
 	}
 	
