@@ -9,7 +9,6 @@ public class SoftConstraints {
 	public void setTotalPenalties(int total) { totalPenalties = total; }
 	
 	// General method to run submethods
-	// DOES NOT TAKE IN PREVIOUS MATCHES YET!
 	public String[] setPenalties(Scheduler s, HardConstraints hc, String[] matches) {
 		// Convert string matches to ints
 		int[] intMatches = new int[matches.length];
@@ -22,7 +21,7 @@ public class SoftConstraints {
 			}
 		}
 		// Run penalty algorithm
-		intMatches = branchAndBound(s,hc,intMatches,totalPenalties);
+		intMatches = branchAndBound(s,hc,intMatches);
 		
 		ArrayList<String> tasks = s.getTasks();
 		for (int i=0; i<matches.length; i++) {
@@ -34,40 +33,42 @@ public class SoftConstraints {
 		return matches;
 	}
 	
-	private int[] branchAndBound(Scheduler s, HardConstraints hc, int[] matches, int total) {
+	private int[] branchAndBound(Scheduler s, HardConstraints hc, int[] matches) {
 		ArrayList<ArrayList<Integer>> grid = s.getMachinePenalties();
 		ArrayList<String> machines = s.getMachines();
 		ArrayList<String> tasks = s.getTasks();
+		
+		int total = 0;
 		
 //		int[] matches = new int[]{-1,-1,-1,-1,-1,-1,-1,-1};
 		
 		// Find best task for each machine by iterating over possible total penalty scores
 		// when machine[i] is must be assigned for that machine
 		for (int mach=0; mach<grid.size(); mach++) {
-			// Only check if machine not already matched
-			if (matches[mach] == -1) {
-				ArrayList<Integer> row = grid.get(mach);
-				// Start with first value in row
-				int forcedTask = row.get(0);
-				setTotalPenalties(iterateRound(s,mach,0,grid,matches));
-				matches[mach] = 0;
-				// Iterate over row
-				for (int task=1; task<row.size(); task++) {
-					// Check only if spot not taken by previous row
-					// And pairing does not violate too-near invalid pairs
-					if (taskAvailable(matches,task) && hc.isValidPair(s.getForbiddenPairs(), machines.get(mach), tasks.get(task))) {
-						int taskPenalty = row.get(task);
-						int roundTotal = iterateRound(s,mach,task,grid,matches);
-						if (roundTotal < getTotalPenalties()) {
-							setTotalPenalties(roundTotal);
-							matches[mach] = task;
-							// Add new forbidden pairs for new match
-							checkTooNearInvalid(s,hc,machines,tasks,mach,task);
-						}
+			total = 99999;
+			ArrayList<Integer> row = grid.get(mach);
+			// Iterate over row
+			for (int task=0; task<row.size(); task++) {
+				// And pairing does not violate too-near invalid pairs
+				if (taskAvailable(matches,task) && hc.isValidPair(s.getForbiddenPairs(), machines.get(mach), tasks.get(task))) {
+					int taskPenalty = row.get(task);
+					int roundTotal = iterateRound(s,mach,task,grid,matches);
+					if (roundTotal < total) {
+						total = roundTotal;
+						matches[mach] = task;
+						// Add new forbidden pairs for new match
+						checkTooNearInvalid(s,hc,machines,tasks,mach,task);
 					}
 				}
 			}
 		}
+		
+		// Go through matches to get best total score
+		int bestTotal = 0;
+		for (int mach=0; mach<matches.length; mach++) {
+			bestTotal += grid.get(mach).get(matches[mach]);
+		}
+		setTotalPenalties(bestTotal);
 		
 		return matches;
 	}
@@ -81,26 +82,27 @@ public class SoftConstraints {
 		return available;
 	}
 	
-	private int iterateRound(Scheduler s, 
-			int mach, int forcedTask,
+	private int iterateRound(Scheduler s, int mach, int forcedTask,
 			ArrayList<ArrayList<Integer>> grid, int[] matches) {
+		// Get lists
 		ArrayList<ArrayList<String>> tooNearList = s.getTooNearPenalties();
 		ArrayList<String> tasks = s.getTasks();
 		// Starting values
-		int[] roundMatches = matches;
+		int[] roundMatches = matches.clone();
 		roundMatches[mach] = forcedTask;
+		int roundTotal = grid.get(mach).get(forcedTask);
 		// Add all scores of rows up to current mach
-		int roundTotal = 0;
-		for (int i=0; i<=mach; i++) {
-			roundTotal += grid.get(roundMatches[i]).get(mach); //grid.get(mach).get(roundMatches[i]);
+		for (int i=0; i<mach; i++) {
+			int prev = grid.get(i).get(roundMatches[i]);
+			roundTotal += prev;
 		}
 		// Check all rows below current mach
 		for (int j=mach+1; j<grid.size(); j++) {
 			ArrayList<Integer> row = grid.get(j);
-			int minValue = row.get(0);
+			int minValue = 99999;
 			// Find lowest value in row
-			for (int t=1; t<row.size(); t++) {
-				// Check only if free
+			for (int t=0; t<row.size(); t++) {
+				// Only check if task not already matched
 				if (taskAvailable(roundMatches,t)) {
 					int newValue = row.get(t) + tooNearPenalty(tasks,j,t,roundMatches,tooNearList);
 					if (newValue < minValue) {
