@@ -1,1 +1,1 @@
-"Solution" H G F E D C B A ; Quality:" 8
+"Solution" H A D B C G E F ; Quality:" 5

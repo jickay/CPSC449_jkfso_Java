@@ -82,7 +82,8 @@ public class Scheduler {
 		// Create simple array of matches
 		for (ArrayList<String> forced : s.getForcedPairs()) {
 			int mach = s.getMachines().indexOf(forced.get(0));
-			s.getFinished()[mach] = forced.get(1);
+			String[] finished = s.getFinished(); 
+			finished[mach]= forced.get(1);
 		}
 		
 		// Complete soft constraints
