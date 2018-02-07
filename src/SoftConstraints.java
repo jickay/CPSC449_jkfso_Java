@@ -40,24 +40,25 @@ public class SoftConstraints {
 		
 		int total = 0;
 		
-//		int[] matches = new int[]{-1,-1,-1,-1,-1,-1,-1,-1};
-		
 		// Find best task for each machine by iterating over possible total penalty scores
 		// when machine[i] is must be assigned for that machine
 		for (int mach=0; mach<grid.size(); mach++) {
 			total = 99999;
 			ArrayList<Integer> row = grid.get(mach);
-			// Iterate over row
-			for (int task=0; task<row.size(); task++) {
-				// And pairing does not violate too-near invalid pairs
-				if (taskAvailable(matches,task) && hc.isValidPair(s.getForbiddenPairs(), machines.get(mach), tasks.get(task))) {
-					int taskPenalty = row.get(task);
-					int roundTotal = iterateRound(s,mach,task,grid,matches);
-					if (roundTotal < total) {
-						total = roundTotal;
-						matches[mach] = task;
-						// Add new forbidden pairs for new match
-						checkTooNearInvalid(s,hc,machines,tasks,mach,task);
+			// If machine doesn't have match already
+			if (matches[mach] == -1) {
+				// Iterate over row
+				for (int task=0; task<row.size(); task++) {
+					// And pairing does not violate too-near invalid pairs
+					if (taskAvailable(matches,task) && hc.isValidPair(s.getForbiddenPairs(), machines.get(mach), tasks.get(task))) {
+						int taskPenalty = row.get(task);
+						int roundTotal = iterateRound(s,mach,task,grid,matches);
+						if (roundTotal < total) {
+							total = roundTotal;
+							matches[mach] = task;
+							// Add new forbidden pairs for new match
+							checkTooNearInvalid(s,hc,machines,tasks,mach,task);
+						}
 					}
 				}
 			}

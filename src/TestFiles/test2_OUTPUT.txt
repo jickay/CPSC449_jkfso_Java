@@ -1,1 +1,1 @@
-"Solution" A B C D E F H G ; Quality:" 0
+"Solution" G A B C D E F H ; Quality:" 0
