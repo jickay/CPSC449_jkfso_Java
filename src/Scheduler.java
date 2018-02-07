@@ -44,11 +44,7 @@ public class Scheduler {
 
 	//Command line args assumes input filename is first argument and output is second any other is not used
 	public void mainMethod(String[] args) {
-		// Run test cases
-//				TestIterator test = new TestIterator();
-//				test.runTests();
-				
-		// Get input arguments from console
+//		// Get input arguments from console
 //		try {
 //			inputFileName = args[0];
 //			outputFileName = args[1];
@@ -56,7 +52,7 @@ public class Scheduler {
 //			System.out.println("Error while determining input and output files");
 //			System.exit(0);
 //		}
-		
+//		
 		// Create start conditions
 		Scheduler s = new Scheduler();
 		
@@ -79,10 +75,22 @@ public class Scheduler {
 		hc.addForbidden(s.getForbiddenPairs(), invalidPairs);
 //		hc.eliminatePairs(s.getMachinePenalties(), s.getTasks(), s.getForbiddenPairs());
 		
-		// Create simple array of matches
+		// Create matches in the finished array
 		for (ArrayList<String> forced : s.getForcedPairs()) {
-			int mach = s.getMachines().indexOf(forced.get(0));
-			s.getFinished()[mach] = forced.get(1);
+			// Check if forced pair violates too-near conditions
+			String machine = forced.get(0);
+			String task = forced.get(1);
+			boolean isValid = hc.isValidPair(s.getForbiddenPairs(),machine,task);
+			// Make match if valid
+			if (isValid) {
+				int mach = s.getMachines().indexOf(machine);
+				s.getFinished()[mach] = task;
+				// Add new too-near invalids created by new match
+				ArrayList<ArrayList<String>> newPair = new ArrayList<ArrayList<String>>();
+				ArrayList<String> pair = new ArrayList<String>(Arrays.asList(machine,task));
+				newPair.add(pair);
+				hc.addForbidden(s.getForbiddenPairs(),hc.tooNear(s.getForcedPairs(),newPair));
+			}
 		}
 		
 		// Complete soft constraints
