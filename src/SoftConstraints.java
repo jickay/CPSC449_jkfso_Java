@@ -51,7 +51,7 @@ public class SoftConstraints {
 				for (int task=0; task<row.size(); task++) {
 					// And pairing does not violate too-near invalid pairs
 					if (taskAvailable(matches,task) && hc.isValidPair(s.getForbiddenPairs(), machines.get(mach), tasks.get(task))) {
-						int taskPenalty = row.get(task);
+						int taskPenalty = row.get(task) + tooNearPenalty(s.getTasks(),mach,task,matches,s.getTooNearPenalties());
 						int roundTotal = iterateRound(s,mach,task,grid,matches);
 						if (roundTotal < total) {
 							total = roundTotal;
