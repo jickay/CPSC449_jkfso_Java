@@ -38,7 +38,7 @@ public class SoftConstraints {
 		ArrayList<String> machines = s.getMachines();
 		ArrayList<String> tasks = s.getTasks();
 		
-		int bestTotal = 99999;
+		int total = 0;
 		
 		// Find best task for each machine by iterating over possible total penalty scores
 		// when machine[i] is must be assigned for that machine
@@ -46,13 +46,19 @@ public class SoftConstraints {
 			ArrayList<Integer> row = grid.get(mach);
 			// If machine doesn't have match already
 			if (matches[mach] == -1) {
-				int total = 99999;
-				// Iterate over row
-				for (int task=0; task<row.size(); task++) {
+				// Base case using first available task
+				int firstTask = 0;
+				for (int i=0; i<matches.length; i++) {
+					if (taskAvailable(matches,i)) { firstTask = i; break; }
+				}
+				total = iterateRound(s,mach,firstTask,grid,matches) + tooNearPenalty(s.getTasks(),mach,firstTask,matches,s.getTooNearPenalties());
+				matches[mach] = firstTask;
+				// Iterate over row to see if any other case gives lower penalty
+				for (int task=firstTask+1; task<row.size(); task++) {
 					// And pairing does not violate too-near invalid pairs
 					if (taskAvailable(matches,task) && hc.isValidPair(s.getForbiddenPairs(), machines.get(mach), tasks.get(task))) {
 						int taskPenalty = row.get(task) + tooNearPenalty(s.getTasks(),mach,task,matches,s.getTooNearPenalties());
-						int roundTotal = iterateRound(s,mach,task,grid,matches);
+						int roundTotal = iterateRound(s,mach,task,grid,matches) + taskPenalty;
 						if (roundTotal < total) {
 							total = roundTotal;
 							matches[mach] = task;
@@ -61,19 +67,13 @@ public class SoftConstraints {
 						}
 					}
 				}
-				if (total < bestTotal) {
-					bestTotal = total;
-				}
 			}
 			
 		}
 		
 		// Go through matches to get best total score
-		bestTotal += getTotalPenalties();
-//		for (int mach=0; mach<matches.length; mach++) {
-//			bestTotal += grid.get(mach).get(matches[mach]);
-//		}
-		setTotalPenalties(bestTotal);
+		total += getTotalPenalties();
+		setTotalPenalties(total);
 		
 		return matches;
 	}
