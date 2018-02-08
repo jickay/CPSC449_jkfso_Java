@@ -119,7 +119,7 @@ public class SoftConstraints {
 	}
 	
 	private int tooNearPenalty(ArrayList<String> tasks, int machine, int taskIndex,
-			int[] matches, ArrayList<ArrayList<String>> tooNearList) {
+			int[] roundMatches, ArrayList<ArrayList<String>> tooNearList) {
 		int penalty = 0;
 		String taskLetter = tasks.get(taskIndex);
 		// Loop through all too-near triples
@@ -129,30 +129,30 @@ public class SoftConstraints {
 			String rightTask = penalties.get(1);
 			int possiblePenalty = Integer.parseInt(penalties.get(2));
 			// Check if task has neighbor, if so set penalty value
-			if (taskLetter == leftTask) {
+			if (taskLetter.matches(leftTask)) {
 				// If at machine 8, check machine 0
 				machine = machine==7? 0 : machine+1;
 				// Get actual task Letter for neighbor machine
-				int tooNearTask = matches[machine];
+				int tooNearTask = roundMatches[machine];
 				String tooNearLetter = "";
 				if (tooNearTask != -1) {
-					tooNearLetter = tasks.get(matches[machine]);
+					tooNearLetter = tasks.get(roundMatches[machine]);
 				}
 				// If is right neighbor, add penalty
-				if (tooNearLetter == rightTask) {
+				if (tooNearLetter.matches(rightTask)) {
 					penalty = possiblePenalty;
 				}
-			} else if (taskLetter == rightTask) {
+			} else if (taskLetter.matches(rightTask)) {
 				// If at machine 0, check machine 7
 				machine = machine==0? 7 : machine-1;
 				// Get actual task Letter for neighbor machine
-				int tooNearTask = matches[machine];
+				int tooNearTask = roundMatches[machine];
 				String tooNearLetter = "";
 				if (tooNearTask != -1) {
-					tooNearLetter = tasks.get(matches[machine]);
+					tooNearLetter = tasks.get(roundMatches[machine]);
 				}
 				// If is left neighbor, add penalty
-				if (tooNearLetter == leftTask) {
+				if (tooNearLetter.matches(leftTask)) {
 					penalty = possiblePenalty;
 				}
 			}
