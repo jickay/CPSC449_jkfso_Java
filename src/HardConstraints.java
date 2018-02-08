@@ -11,7 +11,7 @@ public class HardConstraints {
 		
         // check length, if more than 8 return error
         if(input.size() > 8) {
-            System.out.println("Error, too many forced assignments");
+            System.out.println("partial assignment error");
             //System.exit(0);
         }
 
@@ -47,7 +47,7 @@ public class HardConstraints {
                 
                 // if i'th forced pair is == to j'th closed pair then return error
                 if(tempForcedMachine == tempClosedMachine && tempForcedTask == tempClosedTask) {
-                    System.out.println("list invalid");
+                    System.out.println("No valid solution possible!");
                     //System.exit(0);
                 }
             }
@@ -81,7 +81,7 @@ public class HardConstraints {
 						if (machinePlus == machine+1 || (machine == 8 && machinePlus == 1)) {
 							// If task of new machine i+1 is in the too near pair print error
 							if (taskPlus.equals(tooNear.get(j).get(0)) || taskPlus.equals(tooNear.get(j).get(1))) {
-								System.out.println("Invalid forced pairs + near pairs");
+								System.out.println("No valid solution possible!");
 							}
 						}
 					}
