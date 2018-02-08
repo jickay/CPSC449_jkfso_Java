@@ -38,15 +38,15 @@ public class SoftConstraints {
 		ArrayList<String> machines = s.getMachines();
 		ArrayList<String> tasks = s.getTasks();
 		
-		int total = 0;
+		int bestTotal = 99999;
 		
 		// Find best task for each machine by iterating over possible total penalty scores
 		// when machine[i] is must be assigned for that machine
 		for (int mach=0; mach<grid.size(); mach++) {
-			total = 99999;
 			ArrayList<Integer> row = grid.get(mach);
 			// If machine doesn't have match already
 			if (matches[mach] == -1) {
+				int total = 99999;
 				// Iterate over row
 				for (int task=0; task<row.size(); task++) {
 					// And pairing does not violate too-near invalid pairs
@@ -61,14 +61,18 @@ public class SoftConstraints {
 						}
 					}
 				}
+				if (total < bestTotal) {
+					bestTotal = total;
+				}
 			}
+			
 		}
 		
 		// Go through matches to get best total score
-		int bestTotal = 0;
-		for (int mach=0; mach<matches.length; mach++) {
-			bestTotal += grid.get(mach).get(matches[mach]);
-		}
+		bestTotal += getTotalPenalties();
+//		for (int mach=0; mach<matches.length; mach++) {
+//			bestTotal += grid.get(mach).get(matches[mach]);
+//		}
 		setTotalPenalties(bestTotal);
 		
 		return matches;
@@ -118,7 +122,7 @@ public class SoftConstraints {
 		return roundTotal;
 	}
 	
-	private int tooNearPenalty(ArrayList<String> tasks, int machine, int taskIndex,
+	int tooNearPenalty(ArrayList<String> tasks, int machineIndex, int taskIndex,
 			int[] roundMatches, ArrayList<ArrayList<String>> tooNearList) {
 		int penalty = 0;
 		String taskLetter = tasks.get(taskIndex);
@@ -129,6 +133,7 @@ public class SoftConstraints {
 			String rightTask = penalties.get(1);
 			int possiblePenalty = Integer.parseInt(penalties.get(2));
 			// Check if task has neighbor, if so set penalty value
+			int machine = machineIndex;
 			if (taskLetter.matches(leftTask)) {
 				// If at machine 8, check machine 0
 				machine = machine==7? 0 : machine+1;

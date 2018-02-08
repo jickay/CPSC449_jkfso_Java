@@ -67,8 +67,11 @@ public class Scheduler {
 			System.out.println("Error while parsing input file");
 		}
 		
-		// Complete hard constraints
+		// Create constraint objects
 		HardConstraints hc = new HardConstraints();
+		SoftConstraints sc = new SoftConstraints();
+		
+		// Complete hard constraints
 		s.setForcedPairs(hc.forcedPartialAssignment(s.getForcedPairs()));
 		s.setForbiddenPairs(hc.forbiddenMachine(s.getForcedPairs(), s.getForbiddenPairs()));
 		ArrayList<ArrayList<String>> invalidPairs = hc.tooNear(s.getForcedPairs(), s.getTooNearInvalid());
@@ -83,18 +86,33 @@ public class Scheduler {
 			boolean isValid = hc.isValidPair(s.getForbiddenPairs(),machine,task);
 			// Make match if valid
 			if (isValid) {
+				// Get index of each value
 				int mach = s.getMachines().indexOf(machine);
+				int taskIndex = s.getTasks().indexOf(task);
+				
+				// Add new too-near penalties that may occur by new match
+				int penalties = sc.getTotalPenalties();
+				int[] intMatches = new int[8];
+				String[] matches = s.getFinished();
+				for (int i=0; i<matches.length; i++) {
+					intMatches[i] = s.getTasks().indexOf(matches[i]);
+				}
+				penalties += sc.tooNearPenalty(s.getTasks(),mach,taskIndex,intMatches,s.getTooNearPenalties());
+				sc.setTotalPenalties(penalties);
+				
+				// Make new matches
 				s.getFinished()[mach] = task;
+				
 				// Add new too-near invalids created by new match
 				ArrayList<ArrayList<String>> newPair = new ArrayList<ArrayList<String>>();
 				ArrayList<String> pair = new ArrayList<String>(Arrays.asList(machine,task));
 				newPair.add(pair);
 				hc.addForbidden(s.getForbiddenPairs(),hc.tooNear(s.getForcedPairs(),newPair));
+				
 			}
 		}
 		
 		// Complete soft constraints
-		SoftConstraints sc = new SoftConstraints();
 		s.setFinished(sc.setPenalties(s, hc, s.getFinished()));
 		
 		// Generate output file
