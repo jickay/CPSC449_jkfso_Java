@@ -87,14 +87,14 @@ public class InputParser {
 			// Keep reading next line unless it is blank or end of file
 			if (nextLabelIndex == 5) {
 				while ((aLine = reader.readLine()) != null) {
-					if (!aLine.isEmpty()) {
+					if (!aLine.replaceAll(" ", "").isEmpty()) {
 						aLine = aLine.trim();
 						list.add(parseTuples(aLine,tupleType));
 					}
 				}
 			} else if (nextLabelIndex < 4) {
 				while ((aLine = reader.readLine()) != null && !aLine.matches(labels.get(nextLabelIndex))) {
-					if (!aLine.isEmpty()) {
+					if (!aLine.replaceAll(" ", "").isEmpty()) {
 						aLine = aLine.trim();
 						list.add(parseTuples(aLine,tupleType));
 					}
@@ -118,7 +118,7 @@ public class InputParser {
 			ArrayList<String> gridString = new ArrayList<String>();
 			while ((aLine = reader.readLine()) != null && !aLine.matches(labels.get(nextLabelIndex))) {
 				// Add all non-empty lines into grid
-				if (!(aLine.replaceAll(" ", "").isEmpty())) {
+				if (!aLine.replaceAll(" ", "").isEmpty()) {
 					gridString.add(aLine);
 				}
 			}
