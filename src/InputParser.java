@@ -204,7 +204,7 @@ public class InputParser {
 				//System.exit(0);
 			}
 		} catch (NumberFormatException nfe) {
-			System.out.println("Error while parsing input file");
+			System.out.println("invalid penalty");
 			//System.exit(0);
 		}
 		return num;
