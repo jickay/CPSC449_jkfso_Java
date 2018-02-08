@@ -43,16 +43,16 @@ public class Scheduler {
 	public void setMachinePenalties(ArrayList<ArrayList<Integer>> list) { machinePenalties = list; }
 
 	//Command line args assumes input filename is first argument and output is second any other is not used
-	public void mainMethod(String[] args) {
-//		// Get input arguments from console
-//		try {
-//			inputFileName = args[0];
-//			outputFileName = args[1];
-//		} catch (ArrayIndexOutOfBoundsException e) {
-//			System.out.println("Error while determining input and output files");
-//			System.exit(0);
-//		}
-//		
+	public static void main(String[] args) {
+		// Get input arguments from console
+		try {
+			inputFileName = args[0];
+			outputFileName = args[1];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			System.out.println("Error while determining input and output files");
+			System.exit(0);
+		}
+		
 		// Create start conditions
 		Scheduler s = new Scheduler();
 		
