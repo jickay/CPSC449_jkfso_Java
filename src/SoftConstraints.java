@@ -100,9 +100,9 @@ public class SoftConstraints {
 		// Check all rows below current mach
 		for (int j=mach+1; j<grid.size(); j++) {
 			ArrayList<Integer> row = grid.get(j);
-			int minValue = 99999;
+			int minValue = row.get(0);
 			// Find lowest value in row
-			for (int t=0; t<row.size(); t++) {
+			for (int t=1; t<row.size(); t++) {
 				// Only check if task not already matched
 				if (taskAvailable(roundMatches,t)) {
 					int newValue = row.get(t) + tooNearPenalty(tasks,j,t,roundMatches,tooNearList);
