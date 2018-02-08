@@ -165,7 +165,7 @@ public class InputParser {
 						tuple.add(values[i]);
 					}
 				} else {
-					System.out.println("Invalid machine/task");
+					System.out.println("Invalid task");
 					//System.exit(0);
 				}
 				break;
