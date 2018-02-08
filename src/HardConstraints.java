@@ -17,7 +17,7 @@ public class HardConstraints {
 
         for(int i = 0; i < input.size()-1; i++) {
             if (input.get(i).get(0).equals(input.get(i + 1).get(0)) || input.get(i).get(1).equals(input.get(i + 1).get(1))) {
-                System.out.println("Error, double forced assignment!");
+                System.out.println("partial assignment error");
                 // System.exit(0);
             }
         }
