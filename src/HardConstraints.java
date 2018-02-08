@@ -118,9 +118,10 @@ public class HardConstraints {
 		}
 	}
 	
-	public void eliminatePairs(ArrayList<ArrayList<Integer>> grid, ArrayList<String> tasks, ArrayList<ArrayList<String>> pairList) {
+	public void eliminatePairs(ArrayList<ArrayList<Integer>> grid, ArrayList<String> machines,
+			ArrayList<String> tasks, ArrayList<ArrayList<String>> pairList) {
 		for (ArrayList<String> pair : pairList) {
-			int mach = Integer.parseInt(pair.get(0));
+			int mach = machines.indexOf(pair.get(0));
 			int task = tasks.indexOf(pair.get(1));
 			grid.get(mach).set(task, -1);
 		}
@@ -129,7 +130,7 @@ public class HardConstraints {
 	public boolean isValidPair(ArrayList<ArrayList<String>> forbidden, String mach, String task) {
 		boolean isValid = true;
 		for (ArrayList<String> pairs : forbidden) {
-			if (mach == pairs.get(0) && task == pairs.get(1)) {
+			if (mach.matches(pairs.get(0)) && task.matches(pairs.get(1))) {
 				isValid = false;
 			}
 		}

@@ -69,7 +69,7 @@ public class InputParser {
 				scheduler.setTooNearInvalid(readTupleValues(reader,labels,3,aLine,scheduler.getTooNearInvalid(),"tuples","t,t"));
 				break;
 			case "too-near penalities":
-				scheduler.setTooNearPenalties(readTupleValues(reader,labels,5,aLine,scheduler.getTooNearPenalties(),"tuples","t,t,q"));
+				scheduler.setTooNearPenalties(readTupleValues(reader,labels,5,aLine,scheduler.getTooNearPenalties(),"tuples","t,t"));
 				break;
 			case "machine penalties:":
 				scheduler.setMachinePenalties(readGridValues(reader,labels,4,aLine,scheduler.getMachinePenalties(),"grid","none"));

@@ -73,7 +73,7 @@ public class Scheduler {
 		s.setForbiddenPairs(hc.forbiddenMachine(s.getForcedPairs(), s.getForbiddenPairs()));
 		ArrayList<ArrayList<String>> invalidPairs = hc.tooNear(s.getForcedPairs(), s.getTooNearInvalid());
 		hc.addForbidden(s.getForbiddenPairs(), invalidPairs);
-//		hc.eliminatePairs(s.getMachinePenalties(), s.getTasks(), s.getForbiddenPairs());
+//		hc.eliminatePairs(s.getMachinePenalties(), s.getMachines(), s.getTasks(), s.getForbiddenPairs());
 		
 		// Create matches in the finished array
 		for (ArrayList<String> forced : s.getForcedPairs()) {
