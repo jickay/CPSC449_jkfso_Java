@@ -43,16 +43,24 @@ public class SoftConstraints {
 		// Find best task for each machine by iterating over possible total penalty scores
 		// when machine[i] is must be assigned for that machine
 		for (int mach=0; mach<grid.size(); mach++) {
-			total = 99999;
 			ArrayList<Integer> row = grid.get(mach);
 			// If machine doesn't have match already
 			if (matches[mach] == -1) {
-				// Iterate over row
-				for (int task=0; task<row.size(); task++) {
+				// Base case using first available task
+				int firstTask = 0;
+				for (int i=0; i<matches.length; i++) {
+					if (taskAvailable(matches,i) && hc.isValidPair(s.getForbiddenPairs(),machines.get(mach),tasks.get(i))) {
+						firstTask = i; break;
+					}
+				}
+				total = iterateRound(s,mach,firstTask,grid,matches) + tooNearPenalty(s.getTasks(),mach,firstTask,matches,s.getTooNearPenalties());
+				matches[mach] = firstTask;
+				// Iterate over row to see if any other case gives lower penalty
+				for (int task=firstTask+1; task<row.size(); task++) {
 					// And pairing does not violate too-near invalid pairs
 					if (taskAvailable(matches,task) && hc.isValidPair(s.getForbiddenPairs(), machines.get(mach), tasks.get(task))) {
-						int taskPenalty = row.get(task);
-						int roundTotal = iterateRound(s,mach,task,grid,matches);
+						int taskPenalty = row.get(task) + tooNearPenalty(s.getTasks(),mach,task,matches,s.getTooNearPenalties());
+						int roundTotal = iterateRound(s,mach,task,grid,matches) + taskPenalty;
 						if (roundTotal < total) {
 							total = roundTotal;
 							matches[mach] = task;
@@ -62,14 +70,12 @@ public class SoftConstraints {
 					}
 				}
 			}
+			
 		}
 		
 		// Go through matches to get best total score
-		int bestTotal = 0;
-		for (int mach=0; mach<matches.length; mach++) {
-			bestTotal += grid.get(mach).get(matches[mach]);
-		}
-		setTotalPenalties(bestTotal);
+		total += getTotalPenalties();
+		setTotalPenalties(total);
 		
 		return matches;
 	}
@@ -100,9 +106,9 @@ public class SoftConstraints {
 		// Check all rows below current mach
 		for (int j=mach+1; j<grid.size(); j++) {
 			ArrayList<Integer> row = grid.get(j);
-			int minValue = 99999;
+			int minValue = row.get(0);
 			// Find lowest value in row
-			for (int t=0; t<row.size(); t++) {
+			for (int t=1; t<row.size(); t++) {
 				// Only check if task not already matched
 				if (taskAvailable(roundMatches,t)) {
 					int newValue = row.get(t) + tooNearPenalty(tasks,j,t,roundMatches,tooNearList);
@@ -118,8 +124,8 @@ public class SoftConstraints {
 		return roundTotal;
 	}
 	
-	private int tooNearPenalty(ArrayList<String> tasks, int machine, int taskIndex,
-			int[] matches, ArrayList<ArrayList<String>> tooNearList) {
+	int tooNearPenalty(ArrayList<String> tasks, int machineIndex, int taskIndex,
+			int[] roundMatches, ArrayList<ArrayList<String>> tooNearList) {
 		int penalty = 0;
 		String taskLetter = tasks.get(taskIndex);
 		// Loop through all too-near triples
@@ -129,30 +135,31 @@ public class SoftConstraints {
 			String rightTask = penalties.get(1);
 			int possiblePenalty = Integer.parseInt(penalties.get(2));
 			// Check if task has neighbor, if so set penalty value
-			if (taskLetter == leftTask) {
+			int machine = machineIndex;
+			if (taskLetter.matches(leftTask)) {
 				// If at machine 8, check machine 0
 				machine = machine==7? 0 : machine+1;
 				// Get actual task Letter for neighbor machine
-				int tooNearTask = matches[machine];
+				int tooNearTask = roundMatches[machine];
 				String tooNearLetter = "";
 				if (tooNearTask != -1) {
-					tooNearLetter = tasks.get(matches[machine]);
+					tooNearLetter = tasks.get(roundMatches[machine]);
 				}
 				// If is right neighbor, add penalty
-				if (tooNearLetter == rightTask) {
+				if (tooNearLetter.matches(rightTask)) {
 					penalty = possiblePenalty;
 				}
-			} else if (taskLetter == rightTask) {
+			} else if (taskLetter.matches(rightTask)) {
 				// If at machine 0, check machine 7
 				machine = machine==0? 7 : machine-1;
 				// Get actual task Letter for neighbor machine
-				int tooNearTask = matches[machine];
+				int tooNearTask = roundMatches[machine];
 				String tooNearLetter = "";
 				if (tooNearTask != -1) {
-					tooNearLetter = tasks.get(matches[machine]);
+					tooNearLetter = tasks.get(roundMatches[machine]);
 				}
 				// If is left neighbor, add penalty
-				if (tooNearLetter == leftTask) {
+				if (tooNearLetter.matches(leftTask)) {
 					penalty = possiblePenalty;
 				}
 			}

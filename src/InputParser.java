@@ -200,7 +200,7 @@ public class InputParser {
 			num = Integer.parseInt(numString);
 			// Check if natural number
 			if (num < 0) {
-				System.out.println("Error while parsing input file");
+				System.out.println("invalid penalty");
 				//System.exit(0);
 			}
 		} catch (NumberFormatException nfe) {
