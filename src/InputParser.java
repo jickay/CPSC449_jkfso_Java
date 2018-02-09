@@ -16,7 +16,7 @@ public class InputParser {
 	private void printList(ArrayList<ArrayList<String>> list) {
 		for (int i=0; i<list.size(); i++) {
 			System.out.println(list.get(i));
-			//System.exit(0);
+			System.exit(0);
 		}
 	}
 	
@@ -39,7 +39,7 @@ public class InputParser {
 	    // Check if grid is empty
 	    if (scheduler.getMachinePenalties().size() != 8) {
 	    	System.out.println("machine penalty error");
-	    	// System.exit(0);
+	    	System.exit(0);
 	    }
 	    // Print parsed lists
 	    scheduler.printLists();
@@ -103,7 +103,7 @@ public class InputParser {
 			}
 		} catch (IOException e) {
 			System.out.println("Error while parsing input file");
-			//System.exit(0);
+			System.exit(0);
 		}
 		return list;
 	}
@@ -131,11 +131,11 @@ public class InputParser {
 				}
 			} else {
 				System.out.println("machine penalty error");
-				//System.exit(0);
+				System.exit(0);
 			}
 		} catch (IOException e) {
 			System.out.println("Error while parsing input file");
-			//System.exit(0);
+			System.exit(0);
 		}
 		return list;
 	}
@@ -155,7 +155,7 @@ public class InputParser {
 					}
 				} else {
 					System.out.println("Invalid machine/task");
-					//System.exit(0);
+					System.exit(0);
 				}
 				break;
 			case "t,t":
@@ -166,7 +166,7 @@ public class InputParser {
 					}
 				} else {
 					System.out.println("Invalid task");
-					//System.exit(0);
+					System.exit(0);
 				}
 				break;
 			default: break;
@@ -187,7 +187,7 @@ public class InputParser {
 			}
 		} else {
 			System.out.println("machine penalty error");
-			//System.exit(0);
+			System.exit(0);
 		}
 		
 		return row;
@@ -201,11 +201,11 @@ public class InputParser {
 			// Check if natural number
 			if (num < 0) {
 				System.out.println("invalid penalty");
-				//System.exit(0);
+				System.exit(0);
 			}
 		} catch (NumberFormatException nfe) {
 			System.out.println("invalid penalty");
-			//System.exit(0);
+			System.exit(0);
 		}
 		return num;
 	}
@@ -224,7 +224,7 @@ public class InputParser {
 //			}
 //		} catch (NumberFormatException nfe) {
 //			System.out.println("Error while parsing input file");
-//			//System.exit(0);
+//			System.exit(0);
 //		}
 //		return intList;
 //	}
