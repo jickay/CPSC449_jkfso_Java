@@ -15,10 +15,14 @@ public class HardConstraints {
             System.exit(0);
         }
 
-        for(int i = 0; i < input.size()-1; i++) {
-            if (input.get(i).get(0).equals(input.get(i + 1).get(0)) || input.get(i).get(1).equals(input.get(i + 1).get(1))) {
-                System.out.println("partial assignment error");
-                System.exit(0);
+        for(int i = 0; i < input.size(); i++) {
+            for(int j = 0; j < input.size(); j++) {
+                if(i != j) {
+                    if (input.get(i).get(0).equals(input.get(j).get(0)) || input.get(i).get(1).equals(input.get(j).get(1))) {
+                        System.out.println("partial assignment error");
+                        System.exit(0);
+                    }
+                }
             }
         }
         return input;
