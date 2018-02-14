@@ -91,7 +91,8 @@ public class Scheduler {
 				int taskIndex = s.getTasks().indexOf(task);
 				
 				// Add new too-near penalties that may occur by new match
-				int penalties = sc.getTotalPenalties();
+				ArrayList<ArrayList<Integer>> grid = s.getMachinePenalties();
+				int penalties = sc.getTotalPenalties() + grid.get(mach).get(taskIndex);
 				int[] intMatches = new int[8];
 				String[] matches = s.getFinished();
 				for (int i=0; i<matches.length; i++) {
@@ -107,8 +108,7 @@ public class Scheduler {
 				ArrayList<ArrayList<String>> newPair = new ArrayList<ArrayList<String>>();
 				ArrayList<String> pair = new ArrayList<String>(Arrays.asList(machine,task));
 				newPair.add(pair);
-				hc.addForbidden(s.getForbiddenPairs(),hc.tooNear(s.getForcedPairs(),newPair));
-				
+				hc.addForbidden(s.getForbiddenPairs(),hc.tooNear(newPair,s.getTooNearInvalid()));
 			}
 		}
 		
