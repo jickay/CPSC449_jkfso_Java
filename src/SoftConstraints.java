@@ -47,14 +47,26 @@ public class SoftConstraints {
 			// If machine doesn't have match already
 			if (matches[mach] == -1) {
 				// Base case using first available task
-				int firstTask = 0;
+				int firstTask = -1;
 				for (int i=0; i<matches.length; i++) {
 					if (taskAvailable(matches,i) && hc.isValidPair(s.getForbiddenPairs(),machines.get(mach),tasks.get(i))) {
 						firstTask = i; break;
 					}
 				}
+				
+				// If machine cannot make any matches, then no solution is possible
+				if (firstTask == -1) {
+					/* no solution possible! */
+					System.out.println("No solution possible!");
+					System.exit(0);
+				}
+				
+				// If firstTask get base total to compare with other possible tasks
 				total = iterateRound(s,mach,firstTask,grid,matches) + tooNearPenalty(s.getTasks(),mach,firstTask,matches,s.getTooNearPenalties());
 				matches[mach] = firstTask;
+				// Add new forbidden pairs for new match
+				checkTooNearInvalid(s,hc,machines,tasks,mach,firstTask);
+				
 				// Iterate over row to see if any other case gives lower penalty
 				for (int task=firstTask+1; task<row.size(); task++) {
 					// And pairing does not violate too-near invalid pairs
@@ -182,7 +194,10 @@ public class SoftConstraints {
 			ArrayList<String> machines, ArrayList<String> tasks, int mach, int task) {
 		// Set up data structures
 		ArrayList<ArrayList<String>> newPair = new ArrayList<ArrayList<String>>();
-		ArrayList<String> pair = new ArrayList<String>() {{Arrays.asList(machines.get(mach),tasks.get(task));}};
+		ArrayList<String> pair = new ArrayList<String>();
+		pair.add(machines.get(mach));
+		pair.add(tasks.get(task));
+		newPair.add(pair);
 		ArrayList<ArrayList<String>> tooNearConditions = s.getTooNearInvalid();
 		// Add any new invalid pairs to forbidden list
 		ArrayList<ArrayList<String>> newForbidden = hc.tooNear(newPair, tooNearConditions);
