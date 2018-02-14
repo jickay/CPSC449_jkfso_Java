@@ -43,22 +43,22 @@ public class Scheduler {
 	public void setMachinePenalties(ArrayList<ArrayList<Integer>> list) { machinePenalties = list; }
 
 	//Command line args assumes input filename is first argument and output is second any other is not used
-	public void mainMethod(String[] args) {
+	public static void main(String[] args) {
 //		// Get input arguments from console
-//		try {
-//			inputFileName = args[0];
-//			outputFileName = args[1];
-//		} catch (ArrayIndexOutOfBoundsException e) {
-//			System.out.println("Error while determining input and output files");
-//			System.exit(0);
-//		}
-//		
+		try {
+			inputFileName = args[0];
+			outputFileName = args[1];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			System.out.println("Error while determining input and output files");
+			System.exit(0);
+		}
+		
 		// Create start conditions
 		Scheduler s = new Scheduler();
 		
 		// Parse data into lists
-		inputFileName = args[0];
-		outputFileName = args[1];
+//		inputFileName = args[0];
+//		outputFileName = args[1];
 
 		InputParser parser = new InputParser(inputFileName, s);
 		try {
@@ -91,7 +91,8 @@ public class Scheduler {
 				int taskIndex = s.getTasks().indexOf(task);
 				
 				// Add new too-near penalties that may occur by new match
-				int penalties = sc.getTotalPenalties();
+				ArrayList<ArrayList<Integer>> grid = s.getMachinePenalties();
+				int penalties = sc.getTotalPenalties() + grid.get(mach).get(taskIndex);
 				int[] intMatches = new int[8];
 				String[] matches = s.getFinished();
 				for (int i=0; i<matches.length; i++) {
@@ -107,8 +108,7 @@ public class Scheduler {
 				ArrayList<ArrayList<String>> newPair = new ArrayList<ArrayList<String>>();
 				ArrayList<String> pair = new ArrayList<String>(Arrays.asList(machine,task));
 				newPair.add(pair);
-				hc.addForbidden(s.getForbiddenPairs(),hc.tooNear(s.getForcedPairs(),newPair));
-				
+				hc.addForbidden(s.getForbiddenPairs(),hc.tooNear(newPair,s.getTooNearInvalid()));
 			}
 		}
 		

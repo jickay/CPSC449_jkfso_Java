@@ -8,7 +8,7 @@ import java.util.Scanner;
  */
 public class TestIterator{
 	
-	public static void main(String[] args){
+	public static void mainMethod(String[] args){
 
 		Scanner keyboard = new Scanner(System.in);
 		

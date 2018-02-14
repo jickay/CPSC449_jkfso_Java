@@ -12,13 +12,17 @@ public class HardConstraints {
         // check length, if more than 8 return error
         if(input.size() > 8) {
             System.out.println("partial assignment error");
-            //System.exit(0);
+            System.exit(0);
         }
 
-        for(int i = 0; i < input.size()-1; i++) {
-            if (input.get(i).get(0).equals(input.get(i + 1).get(0)) || input.get(i).get(1).equals(input.get(i + 1).get(1))) {
-                System.out.println("Error, double forced assignment!");
-                // System.exit(0);
+        for(int i = 0; i < input.size(); i++) {
+            for(int j = 0; j < input.size(); j++) {
+                if(i != j) {
+                    if (input.get(i).get(0).equals(input.get(j).get(0)) || input.get(i).get(1).equals(input.get(j).get(1))) {
+                        System.out.println("partial assignment error");
+                        System.exit(0);
+                    }
+                }
             }
         }
         return input;
@@ -48,7 +52,7 @@ public class HardConstraints {
                 // if i'th forced pair is == to j'th closed pair then return error
                 if(tempForcedMachine == tempClosedMachine && tempForcedTask == tempClosedTask) {
                     System.out.println("No valid solution possible!");
-                    //System.exit(0);
+                    System.exit(0);
                 }
             }
         }
@@ -63,6 +67,47 @@ public class HardConstraints {
 		if (forcedPairs.isEmpty()) {
 			return returnList;
 		}
+        
+        ArrayList<String> taskList = new ArrayList<String>();
+        taskList.add("A");
+        taskList.add("B");
+        taskList.add("C");
+        taskList.add("D");
+        taskList.add("E");
+        taskList.add("F");
+        taskList.add("G");
+        taskList.add("H");
+        
+        //Create a list with only unforced tasks
+        for (int x = 0; x < forcedPairs.size(); x++) {
+            for (int y = 0; y < taskList.size(); y++) {
+                if (forcedPairs.get(x).get(1).equals(taskList.get(y))) {
+                    taskList.remove(y);
+                }
+            }
+        }
+        
+        //Create copy of tooNear
+        ArrayList<ArrayList<String>> temp = new ArrayList<ArrayList<String>>();
+        for (int p =0; p < tooNear.size(); p++) {
+            temp.add(tooNear.get(p));
+        }
+       
+        
+        //Remove any tooNear tasks relating to forced pairs from temp
+        for (int z = 0; z<taskList.size(); z++) {
+            for (int v = 0; v<temp.size(); v++) {
+                if (!(temp.get(v).get(1).equals(taskList.get(z))) && !(temp.get(v).get(0).equals(taskList.get(z)))) {
+                    temp.remove(v);
+                }
+            }
+        }
+        
+        //If temp size equals total possible combinations of remaining unforced pairs, exit
+        if (taskList.size()*(taskList.size()-1) == temp.size()) {
+            System.out.println("No valid solution possible!");
+            System.exit(0);
+        }
 		
 		for (int i = 0; i < forcedPairs.size(); i++) {
 			//Get pairing in list of forced pairs
@@ -82,6 +127,7 @@ public class HardConstraints {
 							// If task of new machine i+1 is in the too near pair print error
 							if (taskPlus.equals(tooNear.get(j).get(0)) || taskPlus.equals(tooNear.get(j).get(1))) {
 								System.out.println("No valid solution possible!");
+								System.exit(0);
 							}
 						}
 					}
