@@ -106,10 +106,8 @@ public class InputParser {
 			ArrayList<String> labels, int nextLabelIndex,
 			String aLine, ArrayList<ArrayList<String>> list, String parseType, String tupleType) {
 		try {
-			// Mark reader to return if next label is found
-			reader.mark(1000);
 			// Keep reading next line unless it is blank or end of file
-			if (nextLabelIndex == 5) {
+			if (nextLabelIndex == 6) {
 				while ((aLine = reader.readLine()) != null) {
 					if (!aLine.replaceAll(" ", "").isEmpty()) {
 						aLine = aLine.trim();
@@ -118,7 +116,7 @@ public class InputParser {
 						return list;
 					}
 				}
-			} else if (nextLabelIndex < 4) {
+			} else if (nextLabelIndex < 5) {
 				while ((aLine = reader.readLine()) != null && !aLine.matches(labels.get(nextLabelIndex))) {
 					if (!aLine.replaceAll(" ", "").isEmpty()) {
 						aLine = aLine.trim();
@@ -127,7 +125,6 @@ public class InputParser {
 						return list; 
 					}
 				}
-				reader.reset();
 			}
 		} catch (IOException e) {
 			System.out.println("Error while parsing input file");
