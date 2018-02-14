@@ -1,0 +1,31 @@
+Name:
+invalid2
+
+forced partial assignment:
+(1,A)
+(2,B)
+(3,C)
+(4,D)
+(5,E)
+
+forbidden machine:
+(7,F)
+ 
+too-near tasks:
+(G,H)
+(H,G)
+(A,H)
+(H,A)
+
+machine penalties:
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+
+too-near penalities
+
