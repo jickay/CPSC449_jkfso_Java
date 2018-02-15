@@ -15,7 +15,7 @@ public class Output {
 	private int quality;
 	private String filename;
 	private String zero = "partial assignment error";
-	private String one = "invalid machine task";
+	private String one = "invalid machine/task";
 	private String two = "machine penalty error";
 	private String three = "invalid task";
 	private String four = "invalid penalty";
@@ -77,12 +77,14 @@ public class Output {
 			writer.print("No valid solution possible!");
 		}
 		else {
-			writer.print("\"Solution\" ");
+			writer.print("Solution ");
 			for (int i=0; i<solution.length; i++) {
 				writer.print(solution[i]);
-				writer.print(" ");
+				if (i != solution.length-1) {
+					writer.print(" ");
+				}
 			}
-			writer.print("; Quality:\" ");
+			writer.print("; Quality: ");
 			writer.print(quality);
 		}
 		writer.close();

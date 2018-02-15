@@ -121,9 +121,9 @@ public class Scheduler {
 		// Generate output file
 		String[] solution = s.getFinished();
 		int quality = sc.getTotalPenalties();
-		System.out.println("Solution: ");
-		s.printArray(solution);
-		System.out.println("Quality: " + quality);
+		//System.out.println("Solution: ");
+		//s.printArray(solution);
+		//System.out.println("Quality: " + quality);
 		if (solution.length > 0) { 
 			Output o = new Output(outputFileName, solution, quality);
 			o.print();

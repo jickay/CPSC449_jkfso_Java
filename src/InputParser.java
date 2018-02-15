@@ -38,7 +38,7 @@ public class InputParser {
 	    }
 	    
 	 // Print parsed lists
-	    scheduler.printLists();
+	    //scheduler.printLists();
 	    
 	    // Check if grid is empty
 	    if (scheduler.getMachinePenalties().size() != 8) {
