@@ -120,8 +120,17 @@ public class SoftConstraints {
 		int roundTotal = grid.get(mach).get(forcedTask) + tooNearPenalty(s.getTasks(),mach,forcedTask,roundMatches,tooNearList);
 		// Add all scores of rows up to current mach
 		for (int i=0; i<mach; i++) {
+			// Get penalty of previous match
 			int prev = grid.get(i).get(roundMatches[i]);
-			roundTotal += prev + tooNearPenalty(s.getTasks(),mach,forcedTask,roundMatches,tooNearList);
+			// Get too near penalties for previous match
+			int nextMatch = i == 7? 0 : i+1;
+			int pen = tooNearPenalty(s.getTasks(),i,roundMatches[i],roundMatches,tooNearList);
+			int nextPen = tooNearPenalty(s.getTasks(),nextMatch,roundMatches[nextMatch],roundMatches,tooNearList);
+			// Only add penalty for left neighbor; to prevent counting too-near penalty twice
+			if (pen != nextPen) {
+				roundTotal += pen;
+			}
+			roundTotal += prev;
 		}
 		// Check all rows below current mach
 		int bestValue;

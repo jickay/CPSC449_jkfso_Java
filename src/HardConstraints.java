@@ -74,48 +74,48 @@ public class HardConstraints {
 			return returnList;
 		}
         
-        ArrayList<String> taskList = new ArrayList<String>();
-        taskList.add("A");
-        taskList.add("B");
-        taskList.add("C");
-        taskList.add("D");
-        taskList.add("E");
-        taskList.add("F");
-        taskList.add("G");
-        taskList.add("H");
-        
-        //Create a list with only unforced tasks
-        for (int x = 0; x < forcedPairs.size(); x++) {
-            for (int y = 0; y < taskList.size(); y++) {
-                if (forcedPairs.get(x).get(1).equals(taskList.get(y))) {
-                    taskList.remove(y);
-                }
-            }
-        }
-        
-        //Create copy of tooNear
-        ArrayList<ArrayList<String>> temp = new ArrayList<ArrayList<String>>();
-        for (int p =0; p < tooNear.size(); p++) {
-            temp.add(tooNear.get(p));
-        }
-       
-        
-        //Remove any tooNear tasks relating to forced pairs from temp
-        for (int z = 0; z<taskList.size(); z++) {
-            for (int v = 0; v<temp.size(); v++) {
-                if (!(temp.get(v).get(1).equals(taskList.get(z))) && !(temp.get(v).get(0).equals(taskList.get(z)))) {
-                    temp.remove(v);
-                }
-            }
-        }
-        
-        //If temp size equals total possible combinations of remaining unforced pairs, exit
-        if (taskList.size()*(taskList.size()-1) == temp.size()) {
-            //System.out.println("No valid solution possible!");
-        	Output op = new Output(outputfilename);
-        	op.print();
-        	System.exit(0);
-        }
+//        ArrayList<String> taskList = new ArrayList<String>();
+//        taskList.add("A");
+//        taskList.add("B");
+//        taskList.add("C");
+//        taskList.add("D");
+//        taskList.add("E");
+//        taskList.add("F");
+//        taskList.add("G");
+//        taskList.add("H");
+//        
+//        //Create a list with only unforced tasks
+//        for (int x = 0; x < forcedPairs.size(); x++) {
+//            for (int y = 0; y < taskList.size(); y++) {
+//                if (forcedPairs.get(x).get(1).equals(taskList.get(y))) {
+//                    taskList.remove(y);
+//                }
+//            }
+//        }
+//        
+//        //Create copy of tooNear
+//        ArrayList<ArrayList<String>> temp = new ArrayList<ArrayList<String>>();
+//        for (int p =0; p < tooNear.size(); p++) {
+//            temp.add(tooNear.get(p));
+//        }
+//       
+//        
+//        //Remove any tooNear tasks relating to forced pairs from temp
+//        for (int z = 0; z<taskList.size(); z++) {
+//            for (int v = 0; v<temp.size(); v++) {
+//                if (!(temp.get(v).get(1).equals(taskList.get(z))) && !(temp.get(v).get(0).equals(taskList.get(z)))) {
+//                    temp.remove(v);
+//                }
+//            }
+//        }
+//        
+//        //If temp size equals total possible combinations of remaining unforced pairs, exit
+//        if (taskList.size()*(taskList.size()-1) == temp.size()) {
+//            //System.out.println("No valid solution possible!");
+//        	Output op = new Output(outputfilename);
+//        	op.print();
+//        	System.exit(0);
+//        }
 		
 		for (int i = 0; i < forcedPairs.size(); i++) {
 			//Get pairing in list of forced pairs
