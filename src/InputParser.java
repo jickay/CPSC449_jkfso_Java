@@ -15,7 +15,7 @@ public class InputParser {
 	private void printList(ArrayList<ArrayList<String>> list) {
 		for (int i=0; i<list.size(); i++) {
 			System.out.println(list.get(i));
-			System.exit(0);
+			//System.exit(0);
 		}
 	}
 	
@@ -36,15 +36,17 @@ public class InputParser {
 	    while ((aLine = reader.readLine()) != null) {
 	    	nextLabel = checkLabel(reader, aLine, nextLabel, outputfilename);
 	    }
+	    
+	 // Print parsed lists
+	    scheduler.printLists();
+	    
 	    // Check if grid is empty
 	    if (scheduler.getMachinePenalties().size() != 8) {
 	    	//System.out.println("machine penalty error");
 	    	Output op = new Output(outputfilename);
         	op.printError(2);
-        	System.exit(0);
+        	//System.exit(0);
 	    }
-	    // Print parsed lists
-	    scheduler.printLists();
 	}
 	
 	// Check for appropriate label and parse out values under each label
@@ -69,7 +71,7 @@ public class InputParser {
 			if (currentLine.contains("#")) { 
 				Output op = new Output(outputfilename);
             	op.printError(5); /*comment detected, parser error*/ 
-            	System.exit(0);
+            	//System.exit(0);
             }
 			
 			String[] currentLineParts = currentLine.split(" ");
@@ -78,7 +80,7 @@ public class InputParser {
 				if (!currentLineParts[i].matches(expectedLineParts[i])) {
 					Output op = new Output(outputfilename);
 	            	op.printError(5);
-	            	System.exit(0);
+	            	//System.exit(0);
 	            	//System.out.println("parser error");
 					/* parser error*/
 				}
@@ -91,7 +93,7 @@ public class InputParser {
 				catch (IOException e) { 
 					Output op = new Output(outputfilename);
 	            	op.printError(5);
-	            	System.exit(0); 
+	            	//System.exit(0); 
 	            	/*parser error*/ 
 				}
 				break;
@@ -112,7 +114,8 @@ public class InputParser {
 				break;
 		}
 		
-		return nextLabel + 1;
+		if (nextLabel+1 < labels.size()) { nextLabel += 1; }
+		return nextLabel;
 	}
 	
 	// Reads values in given section until it reaches a blank line or end of file
@@ -121,7 +124,7 @@ public class InputParser {
 			String aLine, ArrayList<ArrayList<String>> list, String parseType, String tupleType, String outputfilename) {
 		try {
 			// Keep reading next line unless it is blank or end of file
-			if (nextLabelIndex == 6) {
+			if (nextLabelIndex == 5) {
 				while ((aLine = reader.readLine()) != null) {
 					if (!aLine.replaceAll(" ", "").isEmpty()) {
 						aLine = aLine.trim();
@@ -144,7 +147,7 @@ public class InputParser {
 			//System.out.println("Error while parsing input file");
 			Output op = new Output(outputfilename);
         	op.printError(5);
-			System.exit(0);
+			//System.exit(0);
 		}
 		return list;
 	}
@@ -159,6 +162,8 @@ public class InputParser {
 				// Add all non-empty lines into grid
 				if (!aLine.replaceAll(" ", "").isEmpty()) {
 					gridString.add(aLine);
+				} else {
+					break;
 				}
 			}
 			// Parse only if 8 rows/machines available
@@ -171,13 +176,13 @@ public class InputParser {
 				//System.out.println("machine penalty error");
 				Output op = new Output(outputfilename);
             	op.printError(2);
-				System.exit(0);
+				//System.exit(0);
 			}
 		} catch (IOException e) {
 			//System.out.println("Error while parsing input file");
 			Output op = new Output(outputfilename);
         	op.printError(5);
-			System.exit(0);
+			//System.exit(0);
 		}
 		return list;
 	}
@@ -199,7 +204,7 @@ public class InputParser {
 					//System.out.println("Invalid machine/task");
 					Output op = new Output(outputfilename);
 	            	op.printError(1);
-					System.exit(0);
+					//System.exit(0);
 				}
 				break;
 			case "t,t":
@@ -212,7 +217,7 @@ public class InputParser {
 					//System.out.println("Invalid task");
 					Output op = new Output(outputfilename);
 	            	op.printError(3);
-					System.exit(0);
+					//System.exit(0);
 				}
 				break;
 			default: break;
@@ -235,7 +240,7 @@ public class InputParser {
 			//System.out.println("machine penalty error");
 			Output op = new Output(outputfilename);
         	op.printError(2);
-			System.exit(0);
+			//System.exit(0);
 		}
 		
 		return row;
@@ -251,13 +256,13 @@ public class InputParser {
 				//System.out.println("invalid penalty");
 				Output op = new Output(outputfilename);
             	op.printError(4);
-				System.exit(0);
+				//System.exit(0);
 			}
 		} catch (NumberFormatException nfe) {
 			//System.out.println("invalid penalty");
 			Output op = new Output(outputfilename);
         	op.printError(4);
-			System.exit(0);
+			//System.exit(0);
 		}
 		return num;
 	}
@@ -276,7 +281,7 @@ public class InputParser {
 //			}
 //		} catch (NumberFormatException nfe) {
 //			System.out.println("Error while parsing input file");
-//			System.exit(0);
+//			//System.exit(0);
 //		}
 //		return intList;
 //	}
