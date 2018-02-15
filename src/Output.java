@@ -19,6 +19,7 @@ public class Output {
 	private String two = "machine penalty error";
 	private String three = "invalid task";
 	private String four = "invalid penalty";
+	private String five = "Error while parsing input file";
 	
 	public Output(String outputFilename, String[] sol, int qual) {
 		solution = sol;
@@ -53,6 +54,9 @@ public class Output {
 		}
 		else if (choice == 4) {
 			writer.print(four);
+		}
+		else if (choice == 5) {
+			writer.print(five);
 		}
 		writer.close();
 	}

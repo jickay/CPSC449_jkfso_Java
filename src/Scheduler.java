@@ -62,9 +62,12 @@ public class Scheduler {
 
 		InputParser parser = new InputParser(inputFileName, s);
 		try {
-			parser.parseData();
+			parser.parseData(outputFileName);
 		} catch (IOException ioe) {
-			System.out.println("Error while parsing input file");
+			//System.out.println("Error while parsing input file");
+			Output op = new Output(outputFileName);
+        	op.printError(5);
+        	System.exit(0);
 		}
 		
 		// Create constraint objects
@@ -72,9 +75,9 @@ public class Scheduler {
 		SoftConstraints sc = new SoftConstraints();
 		
 		// Complete hard constraints
-		s.setForcedPairs(hc.forcedPartialAssignment(s.getForcedPairs()));
-		s.setForbiddenPairs(hc.forbiddenMachine(s.getForcedPairs(), s.getForbiddenPairs()));
-		ArrayList<ArrayList<String>> invalidPairs = hc.tooNear(s.getForcedPairs(), s.getTooNearInvalid());
+		s.setForcedPairs(hc.forcedPartialAssignment(s.getForcedPairs(), outputFileName));
+		s.setForbiddenPairs(hc.forbiddenMachine(s.getForcedPairs(), s.getForbiddenPairs(), outputFileName));
+		ArrayList<ArrayList<String>> invalidPairs = hc.tooNear(s.getForcedPairs(), s.getTooNearInvalid(), outputFileName);
 		hc.addForbidden(s.getForbiddenPairs(), invalidPairs);
 //		hc.eliminatePairs(s.getMachinePenalties(), s.getMachines(), s.getTasks(), s.getForbiddenPairs());
 		
@@ -108,12 +111,12 @@ public class Scheduler {
 				ArrayList<ArrayList<String>> newPair = new ArrayList<ArrayList<String>>();
 				ArrayList<String> pair = new ArrayList<String>(Arrays.asList(machine,task));
 				newPair.add(pair);
-				hc.addForbidden(s.getForbiddenPairs(),hc.tooNear(newPair,s.getTooNearInvalid()));
+				hc.addForbidden(s.getForbiddenPairs(),hc.tooNear(newPair,s.getTooNearInvalid(), outputFileName));
 			}
 		}
 		
 		// Complete soft constraints
-		s.setFinished(sc.setPenalties(s, hc, s.getFinished()));
+		s.setFinished(sc.setPenalties(s, hc, s.getFinished(), outputFileName));
 		
 		// Generate output file
 		String[] solution = s.getFinished();

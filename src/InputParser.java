@@ -26,7 +26,7 @@ public class InputParser {
 	}
 	
 	// Read through file and parse data from each line of text
-	public void parseData() throws IOException {
+	public void parseData(String outputfilename) throws IOException {
 		// File reading objects
 		FileReader fr = new FileReader(path);
 		BufferedReader reader = new BufferedReader(fr);
@@ -34,19 +34,21 @@ public class InputParser {
 		String aLine;
 		int nextLabel = 0;
 	    while ((aLine = reader.readLine()) != null) {
-	    	nextLabel = checkLabel(reader, aLine, nextLabel);
+	    	nextLabel = checkLabel(reader, aLine, nextLabel, outputfilename);
 	    }
 	    // Check if grid is empty
 	    if (scheduler.getMachinePenalties().size() != 8) {
-	    	System.out.println("machine penalty error");
-	    	System.exit(0);
+	    	//System.out.println("machine penalty error");
+	    	Output op = new Output(outputfilename);
+        	op.printError(2);
+        	System.exit(0);
 	    }
 	    // Print parsed lists
 	    scheduler.printLists();
 	}
 	
 	// Check for appropriate label and parse out values under each label
-	private int checkLabel(BufferedReader reader, String aLine, int nextLabel) {
+	private int checkLabel(BufferedReader reader, String aLine, int nextLabel, String outputfilename) {
 		// Make lowercase for consistency in case checks
 		String currentLine = aLine.toLowerCase();
 		currentLine = currentLine.trim();
@@ -64,13 +66,20 @@ public class InputParser {
 			String[] expectedLineParts = expectedLine.split(" ");
 			
 			if (currentLine.matches("")) { return nextLabel; }
-			if (currentLine.contains("#")) { /*comment detected, parser error*/ }
+			if (currentLine.contains("#")) { 
+				Output op = new Output(outputfilename);
+            	op.printError(5); /*comment detected, parser error*/ 
+            	System.exit(0);
+            }
 			
 			String[] currentLineParts = currentLine.split(" ");
 			int n = expectedLineParts.length;
 			for (int i=0; i<n; i++) {
 				if (!currentLineParts[i].matches(expectedLineParts[i])) {
-					System.out.println("parser error");
+					Output op = new Output(outputfilename);
+	            	op.printError(5);
+	            	System.exit(0);
+	            	//System.out.println("parser error");
 					/* parser error*/
 				}
 			}
@@ -79,22 +88,27 @@ public class InputParser {
 		switch (currentLine) {
 			case "name:":
 				try { reader.readLine(); }
-				catch (IOException e) { /*parser error*/ }
+				catch (IOException e) { 
+					Output op = new Output(outputfilename);
+	            	op.printError(5);
+	            	System.exit(0); 
+	            	/*parser error*/ 
+				}
 				break;
 			case "forced partial assignment:":
-				scheduler.setForcedPairs(readTupleValues(reader,labels,nextLabel+1,aLine,scheduler.getForcedPairs(),"tuples","m,t"));
+				scheduler.setForcedPairs(readTupleValues(reader,labels,nextLabel+1,aLine,scheduler.getForcedPairs(),"tuples","m,t",outputfilename));
 				break;
 			case "forbidden machine:":
-				scheduler.setForbiddenPairs(readTupleValues(reader,labels,nextLabel+1,aLine,scheduler.getForbiddenPairs(),"tuples","m,t"));
+				scheduler.setForbiddenPairs(readTupleValues(reader,labels,nextLabel+1,aLine,scheduler.getForbiddenPairs(),"tuples","m,t",outputfilename));
 				break;
 			case "too-near tasks:":
-				scheduler.setTooNearInvalid(readTupleValues(reader,labels,nextLabel+1,aLine,scheduler.getTooNearInvalid(),"tuples","t,t"));
+				scheduler.setTooNearInvalid(readTupleValues(reader,labels,nextLabel+1,aLine,scheduler.getTooNearInvalid(),"tuples","t,t",outputfilename));
 				break;
 			case "too-near penalities":
-				scheduler.setTooNearPenalties(readTupleValues(reader,labels,nextLabel,aLine,scheduler.getTooNearPenalties(),"tuples","t,t"));
+				scheduler.setTooNearPenalties(readTupleValues(reader,labels,nextLabel,aLine,scheduler.getTooNearPenalties(),"tuples","t,t",outputfilename));
 				break;
 			case "machine penalties:":
-				scheduler.setMachinePenalties(readGridValues(reader,labels,nextLabel+1,aLine,scheduler.getMachinePenalties(),"grid","none"));
+				scheduler.setMachinePenalties(readGridValues(reader,labels,nextLabel+1,aLine,scheduler.getMachinePenalties(),"grid","none",outputfilename));
 				break;
 		}
 		
@@ -104,14 +118,14 @@ public class InputParser {
 	// Reads values in given section until it reaches a blank line or end of file
 	private ArrayList<ArrayList<String>> readTupleValues(BufferedReader reader, 
 			ArrayList<String> labels, int nextLabelIndex,
-			String aLine, ArrayList<ArrayList<String>> list, String parseType, String tupleType) {
+			String aLine, ArrayList<ArrayList<String>> list, String parseType, String tupleType, String outputfilename) {
 		try {
 			// Keep reading next line unless it is blank or end of file
 			if (nextLabelIndex == 6) {
 				while ((aLine = reader.readLine()) != null) {
 					if (!aLine.replaceAll(" ", "").isEmpty()) {
 						aLine = aLine.trim();
-						list.add(parseTuples(aLine,tupleType));
+						list.add(parseTuples(aLine,tupleType,outputfilename));
 					} else { 
 						return list;
 					}
@@ -120,14 +134,16 @@ public class InputParser {
 				while ((aLine = reader.readLine()) != null && !aLine.matches(labels.get(nextLabelIndex))) {
 					if (!aLine.replaceAll(" ", "").isEmpty()) {
 						aLine = aLine.trim();
-						list.add(parseTuples(aLine,tupleType));
+						list.add(parseTuples(aLine,tupleType, outputfilename));
 					} else { 
 						return list; 
 					}
 				}
 			}
 		} catch (IOException e) {
-			System.out.println("Error while parsing input file");
+			//System.out.println("Error while parsing input file");
+			Output op = new Output(outputfilename);
+        	op.printError(5);
 			System.exit(0);
 		}
 		return list;
@@ -135,7 +151,7 @@ public class InputParser {
 	
 	private ArrayList<ArrayList<Integer>> readGridValues(BufferedReader reader, 
 			ArrayList<String> labels, int nextLabelIndex, String aLine, 
-			ArrayList<ArrayList<Integer>> list, String parseType, String tupleType) {
+			ArrayList<ArrayList<Integer>> list, String parseType, String tupleType, String outputfilename) {
 		try {
 			// Keep reading next line unless it is blank or end of file
 			ArrayList<String> gridString = new ArrayList<String>();
@@ -149,21 +165,25 @@ public class InputParser {
 			if (gridString.size() == 8) {
 				// Iterate over each line in grid
 				for (String gridLine : gridString) {
-					list.add(parseGrid(gridLine));
+					list.add(parseGrid(gridLine, outputfilename));
 				}
 			} else {
-				System.out.println("machine penalty error");
+				//System.out.println("machine penalty error");
+				Output op = new Output(outputfilename);
+            	op.printError(2);
 				System.exit(0);
 			}
 		} catch (IOException e) {
-			System.out.println("Error while parsing input file");
+			//System.out.println("Error while parsing input file");
+			Output op = new Output(outputfilename);
+        	op.printError(5);
 			System.exit(0);
 		}
 		return list;
 	}
 	
 	// Extracts values from tuples [eg.(1,2)] into integer arraylist
-	private ArrayList<String> parseTuples(String aLine, String type) {
+	private ArrayList<String> parseTuples(String aLine, String type, String outputfilename) {
 		aLine.replaceAll(" ", "");
 		aLine = aLine.replaceAll("[()]", "");
 		String[] values = aLine.split(",");		
@@ -176,18 +196,22 @@ public class InputParser {
 						tuple.add(values[i]);
 					}
 				} else {
-					System.out.println("Invalid machine/task");
+					//System.out.println("Invalid machine/task");
+					Output op = new Output(outputfilename);
+	            	op.printError(1);
 					System.exit(0);
 				}
 				break;
 			case "t,t":
 				if (scheduler.getTasks().contains(values[0]) && scheduler.getTasks().contains(values[1])) {
 					for (int i=0; i<values.length; i++) {
-						if (i == 2) { validateNum(values[i]); }
+						if (i == 2) { validateNum(values[i], outputfilename); }
 						tuple.add(values[i]);
 					}
 				} else {
-					System.out.println("Invalid task");
+					//System.out.println("Invalid task");
+					Output op = new Output(outputfilename);
+	            	op.printError(3);
 					System.exit(0);
 				}
 				break;
@@ -198,17 +222,19 @@ public class InputParser {
 	}
 	
 	// Extracts values from grid separated by spaces into 2d arraylist
-	private ArrayList<Integer> parseGrid(String aLine) {
+	private ArrayList<Integer> parseGrid(String aLine, String outputfilename) {
 		ArrayList<Integer> row = new ArrayList<Integer>();
 		aLine = aLine.trim();
 		String[] values = aLine.split(" ");
 		if (values.length == 8) {
 			for (int i=0; i<values.length; i++) {
 				values[i].replaceAll(" ", "");
-				row.add(validateNum(values[i]));
+				row.add(validateNum(values[i], outputfilename));
 			}
 		} else {
-			System.out.println("machine penalty error");
+			//System.out.println("machine penalty error");
+			Output op = new Output(outputfilename);
+        	op.printError(2);
 			System.exit(0);
 		}
 		
@@ -216,17 +242,21 @@ public class InputParser {
 	}
 	
 	// Add to arraylist if able to parse number string
-	private int validateNum(String numString) {
+	private int validateNum(String numString, String outputfilename) {
 		int num = -1;
 		try {
 			num = Integer.parseInt(numString);
 			// Check if natural number
 			if (num < 0) {
-				System.out.println("invalid penalty");
+				//System.out.println("invalid penalty");
+				Output op = new Output(outputfilename);
+            	op.printError(4);
 				System.exit(0);
 			}
 		} catch (NumberFormatException nfe) {
-			System.out.println("invalid penalty");
+			//System.out.println("invalid penalty");
+			Output op = new Output(outputfilename);
+        	op.printError(4);
 			System.exit(0);
 		}
 		return num;

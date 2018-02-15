@@ -9,7 +9,7 @@ public class SoftConstraints {
 	public void setTotalPenalties(int total) { totalPenalties = total; }
 	
 	// General method to run submethods
-	public String[] setPenalties(Scheduler s, HardConstraints hc, String[] matches) {
+	public String[] setPenalties(Scheduler s, HardConstraints hc, String[] matches, String outputfilename) {
 		// Convert string matches to ints
 		int[] intMatches = new int[matches.length];
 		for (int i=0; i<matches.length; i++) {
@@ -21,7 +21,7 @@ public class SoftConstraints {
 			}
 		}
 		// Run penalty algorithm
-		intMatches = branchAndBound(s,hc,intMatches);
+		intMatches = branchAndBound(s,hc,intMatches, outputfilename);
 		
 		ArrayList<String> tasks = s.getTasks();
 		for (int i=0; i<matches.length; i++) {
@@ -33,7 +33,7 @@ public class SoftConstraints {
 		return matches;
 	}
 	
-	private int[] branchAndBound(Scheduler s, HardConstraints hc, int[] matches) {
+	private int[] branchAndBound(Scheduler s, HardConstraints hc, int[] matches, String outputfilename) {
 		ArrayList<ArrayList<Integer>> grid = s.getMachinePenalties();
 		ArrayList<String> machines = s.getMachines();
 		ArrayList<String> tasks = s.getTasks();
@@ -57,7 +57,9 @@ public class SoftConstraints {
 				// If machine cannot make any matches, then no solution is possible
 				if (firstTask == -1) {
 					/* no solution possible! */
-					System.out.println("No solution possible!");
+					//System.out.println("No solution possible!");
+					Output op = new Output(outputfilename);
+                	op.print();
 					System.exit(0);
 				}
 				
@@ -76,7 +78,7 @@ public class SoftConstraints {
 							bestTotal = roundTotal;
 							matches[mach] = task;
 							// Add new forbidden pairs for new match
-							checkTooNearInvalid(s,hc,machines,tasks,mach,task);
+							checkTooNearInvalid(s,hc,machines,tasks,mach,task, outputfilename);
 						}
 					}
 				}
@@ -85,7 +87,7 @@ public class SoftConstraints {
 				if (bestTotal == firstTotal) {
 					matches[mach] = firstTask;
 					// Add new forbidden pairs for new match
-					checkTooNearInvalid(s,hc,machines,tasks,mach,firstTask);
+					checkTooNearInvalid(s,hc,machines,tasks,mach,firstTask, outputfilename);
 				}
 			}
 		}
@@ -215,7 +217,7 @@ public class SoftConstraints {
 	
 	// Check for any additional too-near invalid pairs and add to forbidden list
 	private void checkTooNearInvalid(Scheduler s, HardConstraints hc,
-			ArrayList<String> machines, ArrayList<String> tasks, int mach, int task) {
+			ArrayList<String> machines, ArrayList<String> tasks, int mach, int task, String outputfilename) {
 		// Set up data structures
 		ArrayList<ArrayList<String>> newPair = new ArrayList<ArrayList<String>>();
 		ArrayList<String> pair = new ArrayList<String>();
@@ -224,7 +226,7 @@ public class SoftConstraints {
 		newPair.add(pair);
 		ArrayList<ArrayList<String>> tooNearConditions = s.getTooNearInvalid();
 		// Add any new invalid pairs to forbidden list
-		ArrayList<ArrayList<String>> newForbidden = hc.tooNear(newPair, tooNearConditions);
+		ArrayList<ArrayList<String>> newForbidden = hc.tooNear(newPair, tooNearConditions, outputfilename);
 		hc.addForbidden(s.getForbiddenPairs(), newForbidden);
 	}
 }

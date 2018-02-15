@@ -5,13 +5,15 @@ public class HardConstraints {
 	
 	// This method checks for machines and tasks that have been paired more than once.
     // returns true if no repetitions found. Prints error message and terminates execution otherwise.
-	public ArrayList<ArrayList<String>> forcedPartialAssignment(ArrayList<ArrayList<String>> forcedPairs) {
+	public ArrayList<ArrayList<String>> forcedPartialAssignment(ArrayList<ArrayList<String>> forcedPairs, String outputfilename) {
         // Takes one input. The forced partial list that has been parsed.
         ArrayList<ArrayList<String>> input = forcedPairs;  // check type
 		
         // check length, if more than 8 return error
         if(input.size() > 8) {
-            System.out.println("partial assignment error");
+            //System.out.println("partial assignment error");
+        	Output op = new Output(outputfilename);
+        	op.printError(0);
             System.exit(0);
         }
 
@@ -19,8 +21,10 @@ public class HardConstraints {
             for(int j = 0; j < input.size(); j++) {
                 if(i != j) {
                     if (input.get(i).get(0).equals(input.get(j).get(0)) || input.get(i).get(1).equals(input.get(j).get(1))) {
-                        System.out.println("partial assignment error");
-                        System.exit(0);
+                        //System.out.println("partial assignment error");
+                    	Output op = new Output(outputfilename);
+                    	op.printError(0);
+                    	System.exit(0);
                     }
                 }
             }
@@ -30,7 +34,7 @@ public class HardConstraints {
 	
     // This method compares pairs in forcedPairs to pairs in closedPairs
     // returns true if no repetitions found. Prints error message and terminates execution otherwise.
-	public ArrayList<ArrayList<String>> forbiddenMachine(ArrayList<ArrayList<String>> forcedPairs, ArrayList<ArrayList<String>> closedPairs) {
+	public ArrayList<ArrayList<String>> forbiddenMachine(ArrayList<ArrayList<String>> forcedPairs, ArrayList<ArrayList<String>> closedPairs, String outputfilename) {
         // this function takes in two inputs, the forced pairs list and closed/forbidden pairs list.        
         ArrayList<ArrayList<String>> forcedList = forcedPairs;
         ArrayList<ArrayList<String>> closedList = closedPairs;
@@ -51,8 +55,10 @@ public class HardConstraints {
                 
                 // if i'th forced pair is == to j'th closed pair then return error
                 if(tempForcedMachine == tempClosedMachine && tempForcedTask == tempClosedTask) {
-                    System.out.println("No valid solution possible!");
-                    System.exit(0);
+                    //System.out.println("No valid solution possible!");
+                	Output op = new Output(outputfilename);
+                	op.print();
+                	System.exit(0);
                 }
             }
         }
@@ -61,7 +67,7 @@ public class HardConstraints {
 	}
 	
 	// Currently only prints console error message
-	public ArrayList<ArrayList<String>> tooNear(ArrayList<ArrayList<String>> forcedPairs, ArrayList<ArrayList<String>> tooNear) {
+	public ArrayList<ArrayList<String>> tooNear(ArrayList<ArrayList<String>> forcedPairs, ArrayList<ArrayList<String>> tooNear, String outputfilename) {
 		ArrayList<ArrayList<String>> returnList = new ArrayList<ArrayList<String>>();
 		
 		if (forcedPairs.isEmpty()) {
@@ -105,8 +111,10 @@ public class HardConstraints {
         
         //If temp size equals total possible combinations of remaining unforced pairs, exit
         if (taskList.size()*(taskList.size()-1) == temp.size()) {
-            System.out.println("No valid solution possible!");
-            System.exit(0);
+            //System.out.println("No valid solution possible!");
+        	Output op = new Output(outputfilename);
+        	op.print();
+        	System.exit(0);
         }
 		
 		for (int i = 0; i < forcedPairs.size(); i++) {
@@ -126,7 +134,9 @@ public class HardConstraints {
 						if (machinePlus == machine+1 || (machine == 8 && machinePlus == 1)) {
 							// If task of new machine i+1 is in the too near pair print error
 							if (taskPlus.equals(tooNear.get(j).get(0)) || taskPlus.equals(tooNear.get(j).get(1))) {
-								System.out.println("No valid solution possible!");
+								//System.out.println("No valid solution possible!");
+								Output op = new Output(outputfilename);
+			                	op.print();
 								System.exit(0);
 							}
 						}
