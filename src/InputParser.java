@@ -15,7 +15,7 @@ public class InputParser {
 	private void printList(ArrayList<ArrayList<String>> list) {
 		for (int i=0; i<list.size(); i++) {
 			System.out.println(list.get(i));
-			//System.exit(0);
+			System.exit(0);
 		}
 	}
 	
@@ -45,7 +45,7 @@ public class InputParser {
 	    	//System.out.println("machine penalty error");
 	    	Output op = new Output(outputfilename);
         	op.printError(2);
-        	//System.exit(0);
+        	System.exit(0);
 	    }
 	}
 	
@@ -71,7 +71,7 @@ public class InputParser {
 			if (currentLine.contains("#")) { 
 				Output op = new Output(outputfilename);
             	op.printError(5); /*comment detected, parser error*/ 
-            	//System.exit(0);
+            	System.exit(0);
             }
 			
 			String[] currentLineParts = currentLine.split(" ");
@@ -80,7 +80,7 @@ public class InputParser {
 				if (!currentLineParts[i].matches(expectedLineParts[i])) {
 					Output op = new Output(outputfilename);
 	            	op.printError(5);
-	            	//System.exit(0);
+	            	System.exit(0);
 	            	//System.out.println("parser error");
 					/* parser error*/
 				}
@@ -93,7 +93,7 @@ public class InputParser {
 				catch (IOException e) { 
 					Output op = new Output(outputfilename);
 	            	op.printError(5);
-	            	//System.exit(0); 
+	            	System.exit(0); 
 	            	/*parser error*/ 
 				}
 				break;
@@ -147,7 +147,7 @@ public class InputParser {
 			//System.out.println("Error while parsing input file");
 			Output op = new Output(outputfilename);
         	op.printError(5);
-			//System.exit(0);
+			System.exit(0);
 		}
 		return list;
 	}
@@ -176,13 +176,13 @@ public class InputParser {
 				//System.out.println("machine penalty error");
 				Output op = new Output(outputfilename);
             	op.printError(2);
-				//System.exit(0);
+				System.exit(0);
 			}
 		} catch (IOException e) {
 			//System.out.println("Error while parsing input file");
 			Output op = new Output(outputfilename);
         	op.printError(5);
-			//System.exit(0);
+			System.exit(0);
 		}
 		return list;
 	}
@@ -204,7 +204,7 @@ public class InputParser {
 					//System.out.println("Invalid machine/task");
 					Output op = new Output(outputfilename);
 	            	op.printError(1);
-					//System.exit(0);
+					System.exit(0);
 				}
 				break;
 			case "t,t":
@@ -217,7 +217,7 @@ public class InputParser {
 					//System.out.println("Invalid task");
 					Output op = new Output(outputfilename);
 	            	op.printError(3);
-					//System.exit(0);
+					System.exit(0);
 				}
 				break;
 			default: break;
@@ -240,7 +240,7 @@ public class InputParser {
 			//System.out.println("machine penalty error");
 			Output op = new Output(outputfilename);
         	op.printError(2);
-			//System.exit(0);
+			System.exit(0);
 		}
 		
 		return row;
@@ -256,13 +256,13 @@ public class InputParser {
 				//System.out.println("invalid penalty");
 				Output op = new Output(outputfilename);
             	op.printError(4);
-				//System.exit(0);
+				System.exit(0);
 			}
 		} catch (NumberFormatException nfe) {
 			//System.out.println("invalid penalty");
 			Output op = new Output(outputfilename);
         	op.printError(4);
-			//System.exit(0);
+			System.exit(0);
 		}
 		return num;
 	}
@@ -281,7 +281,7 @@ public class InputParser {
 //			}
 //		} catch (NumberFormatException nfe) {
 //			System.out.println("Error while parsing input file");
-//			//System.exit(0);
+//			System.exit(0);
 //		}
 //		return intList;
 //	}
