@@ -14,6 +14,11 @@ public class Output {
 	private String[] solution;
 	private int quality;
 	private String filename;
+	private String zero = "partial assignment error";
+	private String one = "invalid machine task";
+	private String two = "machine penalty error";
+	private String three = "invalid task";
+	private String four = "invalid penalty";
 	
 	public Output(String outputFilename, String[] sol, int qual) {
 		solution = sol;
@@ -25,6 +30,31 @@ public class Output {
 		solution = new String[0];
 		quality = 0;
 		filename = outputFilename;
+	}
+	
+	public void printError(int choice) {
+		PrintWriter writer = null;
+		try {
+			writer = new PrintWriter(filename);
+		} catch (FileNotFoundException fnfe) {
+			System.out.println("fnf");
+		}
+		if (choice == 0) {
+			writer.print(zero);
+		}
+		else if (choice == 1) {
+			writer.print(one);
+		}
+		else if (choice == 2) {
+			writer.print(two);
+		}
+		else if (choice == 3) {
+			writer.print(three);
+		}
+		else if (choice == 4) {
+			writer.print(four);
+		}
+		writer.close();
 	}
 	
 /* Creates a new text document using the String filename as the title. If there is
